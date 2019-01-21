@@ -13,23 +13,40 @@ public class OctreeNode {
 	public OctreeNode[] children=null;
 	public OctreeNode father;
 	public Point_3 p; //point stored in a leaf
-	
+
 	/**
 	 * Create the octree for storing an input point cloud
 	 */
 	public OctreeNode(List<Point_3> points) {
-		
+		double L = findLength(points);
+		Point_3 center = findCenter(points);
+		this.level = 0;
+		this.children = null;
+		this.father = null;
+		this.p = null;
+		for (Point_3 p : points){
+			this.add(p, L, center);
+		}
 	}
 	
 	/**
 	 * Add a node into the OctreeNode
 	 */
-	public void add(Point_3 p) {
-		throw new Error("To be completed");
+	public void add(Point_3 point, double L, Point_3 center) {
+		if (this.children == null){
+			if (this.p == null){
+				this.p = point;
+			}
+			else{
+				this.children = new OctreeNode[8];
+				for (int i = 0; i<8; i++){
+					this.children[i].level = this.level +1;
+				}
+			}
+		}
 	}
 
-	public double[][] min_and_max_dim(List<Point_3> points){
-        int n = pointArray.length;
+	public static double[][] min_and_max_dim(List<Point_3> points){
 		double[][] min_max_dim = new double[2][3];
 		min_max_dim[0][0] = points.get(0).x;
 		min_max_dim[0][1] = points.get(0).y;
@@ -62,18 +79,18 @@ public class OctreeNode {
         return min_max_dim;
     }
 
-    public double findLength(Point_3[] pointArray){
-		double[] max_dim  = max_dim(pointArray);
-		double[] min_dim  = min_dim(pointArray);
+    public static double findLength(List<Point_3> points){
+		double[] min_dim  = min_and_max_dim(points)[0];
+		double[] max_dim  = min_and_max_dim(points)[1];
         double widthX = max_dim[0] - min_dim[0];
 		double widthY = max_dim[1] - min_dim[1];
 		double widthZ = max_dim[2] - min_dim[2];
         return(Math.max(Math.max(widthY, widthZ), widthX));
     }
     
-    public Point_3 findCenter(Point_3[] pointArray){
-        double[] max_dim  = max_dim(pointArray);
-        double[] min_dim  = min_dim(pointArray);
+    public static Point_3 findCenter(List<Point_3> points){
+		double[] min_dim  = min_and_max_dim(points)[0];
+		double[] max_dim  = min_and_max_dim(points)[1];
         Point_3 center = new Point_3((max_dim[0] + min_dim[0])/2, (max_dim[1] + min_dim[1])/2, (max_dim[2] + min_dim[2])/2);
         return center;
     }
