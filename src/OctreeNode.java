@@ -54,7 +54,7 @@ public class OctreeNode {
 			else { // only one level, already one point
 				this.children = new OctreeNode[8];
 				for (int i = 0; i < 8; i++) {
-					this.children[i] = OctreeNode(this.level+1, this);
+					this.children[i] = new OctreeNode(this.level+1, this);
 				}
 				if (quadrant(this.p, center, L) != quadrant(point, center, L)) { // points are in different quadrants
 					this.children[quadrant(this.p, center, L)].p = p;
@@ -71,17 +71,28 @@ public class OctreeNode {
 				}
 			}
 		}
-		else { // adding to an OctreeNode with children
-			assert this.p == null;
-			if (this.children[quadrant(point, center, L)].children == null && 
-			this.children[quadrant(point, center, L)].p == null) { // the quadrant is free
-				this.children[quadrant(point)].p = point;
+		else { // adding to an OctreeNode with children: add recursively
+			assert this.p == null; // there shouldn't be a point here
+			double newL = L/2;
+			Point_3 newCenter = newCenter(point, center, L);
+			this.children[quadrant(point, center, L)].add(point, newL, newCenter);
+		}
+	}
+
+	public void printThis() {
+		if (this.p == null && this.children == null) {
+			System.out.print("empty");
+		}
+		else if (this.p != null) {
+			System.out.print(this.p);
+		}
+		else {
+			System.out.print("Node(");
+			for (OctreeNode child:this.children) {
+				child.printThis();
+				System.out.print(", ");
 			}
-			else { // the quadrant already contains one or several points 
-				double newL = L/2;
-				Point_3 newCenter = newCenter(point, center, L);
-				this.children[quadrant(point, center, L)].add(point, newL, newCenter);
-			}
+			System.out.print(")");
 		}
 	}
 
@@ -95,7 +106,7 @@ public class OctreeNode {
 	 */
 
 	public static Point_3 newCenter(Point_3 point, Point_3 center, double L) {
-		Point_3 newCenter;
+		Point_3 newCenter = new Point_3();
 		newCenter.x = (point.x <= center.x) ? center.x-L/4 : center.x+L/4;
 		newCenter.y = (point.y <= center.y) ? center.y-L/4 : center.y+L/4;
 		newCenter.z = (point.z <= center.z) ? center.z-L/4 : center.z+L/4;
@@ -139,6 +150,8 @@ public class OctreeNode {
 		if (point.x > center.x && point.y > center.y && point.z > center.z) {
 			return 7; // 111
 		}
+		assert false; // we shouldn't reach this point
+		return -1;
 	}
 
 	/**

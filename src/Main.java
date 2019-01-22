@@ -17,6 +17,8 @@ public class Main {
         points.add(p4);
         System.out.println(OctreeNode.findCenter(points));
         System.out.println(OctreeNode.findLength(points));
+        OctreeNode oc = new OctreeNode(points);
+        oc.printThis();
 
     
     }
