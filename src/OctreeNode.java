@@ -32,6 +32,12 @@ public class OctreeNode {
 		}
 	}
 
+	/**
+	 * Build an empty OctreeNode
+	 * @param level
+	 * @param father
+	 */
+
 	public OctreeNode(int level, OctreeNode father) {
 		this.level = level;
 		this.children = null;
@@ -78,15 +84,17 @@ public class OctreeNode {
 			this.children[quadrant(point, center, L)].add(point, newL, newCenter);
 		}
 	}
-
-	public void printThis() {
+	/**
+	 * prints this OctreeNode recursively
+	 */
+	public void printThis() { 
 		if (this.p == null && this.children == null) {
 			System.out.print("empty");
 		}
-		else if (this.p != null) {
+		else if (this.p != null) { // print coordinates
 			System.out.print(this.p);
 		}
-		else {
+		else { // recursion
 			System.out.print("Node(");
 			for (OctreeNode child:this.children) {
 				child.printThis();
