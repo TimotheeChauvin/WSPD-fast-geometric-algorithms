@@ -56,20 +56,31 @@ public class OctreeNode {
 				for (int i = 0; i < 8; i++) {
 					this.children[i] = OctreeNode(this.level+1, this);
 				}
-				if (quadrant(this.p) != quadrant(point)) { // points are in different quadrants
-					this.children[quadrant(this.p)].p = p;
-					this.children[quadrant(point)].p = point;
+				if (quadrant(this.p, center, L) != quadrant(point, center, L)) { // points are in different quadrants
+					this.children[quadrant(this.p, center, L)].p = p;
+					this.children[quadrant(point, center, L)].p = point;
 					this.p = null;
 				}
 				else { // points in the same quadrant: we need to recurse
-					this.children[quadrant(this.p)].p = p;
+					this.children[quadrant(this.p, center, L)].p = p;
 					this.p = null;
 					// Now we consider the new smaller cube defined by quadrant(this.p)
 					double newL = L/2;
-					Point_3 newCenter;
-					if (quadrant)
-
+					Point_3 newCenter = newCenter(point, center, L);
+					this.children[quadrant(point, center, L)].add(point, newL, newCenter);
 				}
+			}
+		}
+		else { // adding to an OctreeNode with children
+			assert this.p == null;
+			if (this.children[quadrant(point, center, L)].children == null && 
+			this.children[quadrant(point, center, L)].p == null) { // the quadrant is free
+				this.children[quadrant(point)].p = point;
+			}
+			else { // the quadrant already contains one or several points 
+				double newL = L/2;
+				Point_3 newCenter = newCenter(point, center, L);
+				this.children[quadrant(point, center, L)].add(point, newL, newCenter);
 			}
 		}
 	}
