@@ -44,12 +44,52 @@ public class OctreeNode {
 				this.p = point;
 			}
 			else { // only one level, already one point
-				this.children = new OctreeNode(this.level+1, this)[8];
+				this.children = new OctreeNode[8];
 				for (int i = 0; i < 8; i++) {
-					this.children[i].level = this.level + 1;
+					this.children[i] = OctreeNode(this.level+1, this);
+				}
+				if (quadrant(this.p) != quadrant(point)) { // points are in different quadrants
+					this.p = null;
+					this.children[quadrant(this.p)].p = p;
+					this.children[quadrant(point)].p = point;
+				}
+				else { // points in the same quadrant
+
 				}
 			}
 		}
+	}
+
+	public static int quadrant(Point_3 point, Point_3 center, double L) {
+		if (point.x > center.x) {
+			if (point.y > center.y) {
+				if (point.z > center.z) {
+					return 7;
+				}
+				return 6;
+			}
+			else {
+				if (point.z > center.z) {
+					return 5;
+				} 
+				return 4;
+			}
+		}
+		else {
+			if (point.y > center.y) {
+				if (point.z > center.z) {
+					return 3;
+				}
+				return 2;
+			}
+			else {
+				if (point.z > center.z) {
+					return 1;
+				}
+				return 0; 
+			}
+		}
+
 	}
 
 	public static double[][] min_and_max_dim(List<Point_3> points) {
