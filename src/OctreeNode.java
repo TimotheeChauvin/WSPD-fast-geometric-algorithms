@@ -10,6 +10,7 @@ import Jcg.geometry.Point_3;
  */
 
 public class OctreeNode {
+	public double L;
 	public int level;
 	public OctreeNode[] children = null;
 	public OctreeNode father;
@@ -21,7 +22,7 @@ public class OctreeNode {
 	 */
 
 	public OctreeNode(List<Point_3> points) {
-		double L = findLength(points);
+		this.L = findLength(points);
 		Point_3 center = findCenter(points);
 		this.level = 0;
 		this.children = null;
@@ -38,7 +39,8 @@ public class OctreeNode {
 	 * @param father
 	 */
 
-	public OctreeNode(int level, OctreeNode father) {
+	public OctreeNode(int level, OctreeNode father, double L) {
+		this.L = L;
 		this.level = level;
 		this.children = null;
 		this.father = father;
@@ -60,16 +62,14 @@ public class OctreeNode {
 			else { // only one level, already one point
 				this.children = new OctreeNode[8];
 				for (int i = 0; i < 8; i++) {
-					this.children[i] = new OctreeNode(this.level+1, this);
+					this.children[i] = new OctreeNode(this.level+1, this, this.L/2);
 				}
 				if (quadrant(this.p, center, L) != quadrant(point, center, L)) { // points are in different quadrants
 					this.children[quadrant(this.p, center, L)].p = p;
 					this.children[quadrant(point, center, L)].p = point;
-					this.p = null;
 				}
 				else { // points in the same quadrant: we need to recurse
 					this.children[quadrant(this.p, center, L)].p = p;
-					this.p = null;
 					// Now we consider the new smaller cube defined by quadrant(this.p)
 					double newL = L/2;
 					Point_3 newCenter = newCenter(point, center, L);
@@ -78,7 +78,6 @@ public class OctreeNode {
 			}
 		}
 		else { // adding to an OctreeNode with children: add recursively
-			assert this.p == null; // there shouldn't be a point here
 			double newL = L/2;
 			Point_3 newCenter = newCenter(point, center, L);
 			this.children[quadrant(point, center, L)].add(point, newL, newCenter);
@@ -88,14 +87,16 @@ public class OctreeNode {
 	 * prints this OctreeNode recursively
 	 */
 	public void printThis() { 
-		if (this.p == null && this.children == null) {
-			System.out.print("empty");
-		}
-		else if (this.p != null) { // print coordinates
-			System.out.print(this.p);
+		if (this.children == null) {
+			if (this.p == null) {
+				System.out.print("empty");
+			}
+			else {
+				System.out.print(this.p);
+			}
 		}
 		else { // recursion
-			System.out.print("Node(");
+			System.out.print("Node[L=" + this.L + "][rep=" + this.p + "](");
 			for (OctreeNode child:this.children) {
 				child.printThis();
 				System.out.print(", ");
