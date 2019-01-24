@@ -15,6 +15,7 @@ public class OctreeNode {
 	public OctreeNode[] children = null;
 	public OctreeNode father;
 	public Point_3 p; // point stored in a leaf
+	public Point_3 center;
 
 	/**
 	 * Create the octree for storing an input point cloud
@@ -23,13 +24,13 @@ public class OctreeNode {
 
 	public OctreeNode(List<Point_3> points) {
 		this.L = findLength(points);
-		Point_3 center = findCenter(points);
+		this.center = findCenter(points);
 		this.level = 0;
 		this.children = null;
 		this.father = null;
 		this.p = null;
 		for (Point_3 p : points) {
-			this.add(p, L, center);
+			this.add(p);
 		}
 	}
 
@@ -39,22 +40,21 @@ public class OctreeNode {
 	 * @param father
 	 */
 
-	public OctreeNode(int level, OctreeNode father, double L) {
+	public OctreeNode(int level, OctreeNode father, double L, Point_3 center) {
 		this.L = L;
 		this.level = level;
 		this.children = null;
 		this.father = father;
+		this.center = center;
 	}
 
 	/**
 	 * Add a point into the OctreeNode
 	 * 
 	 * @param point the point to add
-	 * @param L the length of the current considered cube
-	 * @param center the center of the current considered cube
 	 */
 
-	public void add(Point_3 point, double L, Point_3 center) {
+	public void add(Point_3 point) {
 		if (this.children == null) { // only one level
 			if (this.p == null) { // no point yet
 				this.p = point;
@@ -62,25 +62,22 @@ public class OctreeNode {
 			else { // only one level, already one point
 				this.children = new OctreeNode[8];
 				for (int i = 0; i < 8; i++) {
-					this.children[i] = new OctreeNode(this.level+1, this, this.L/2);
+					Point_3 newCenter = newCenter(i, this.center, this.L);
+					this.children[i] = new OctreeNode(this.level+1, this, this.L/2, newCenter);
 				}
-				if (quadrant(this.p, center, L) != quadrant(point, center, L)) { // points are in different quadrants
-					this.children[quadrant(this.p, center, L)].p = p;
-					this.children[quadrant(point, center, L)].p = point;
+				if (quadrant(this.p, center, this.L) != quadrant(point, this.center, this.L)) { // points are in different quadrants
+					this.children[quadrant(this.p, this.center, this.L)].p = p;
+					this.children[quadrant(point, this.center, this.L)].p = point;
 				}
 				else { // points in the same quadrant: we need to recurse
-					this.children[quadrant(this.p, center, L)].p = p;
+					this.children[quadrant(this.p, this.center, this.L)].p = p;
 					// Now we consider the new smaller cube defined by quadrant(this.p)
-					double newL = L/2;
-					Point_3 newCenter = newCenter(point, center, L);
-					this.children[quadrant(point, center, L)].add(point, newL, newCenter);
+					this.children[quadrant(point, this.center, this.L)].add(point);
 				}
 			}
 		}
 		else { // adding to an OctreeNode with children: add recursively
-			double newL = L/2;
-			Point_3 newCenter = newCenter(point, center, L);
-			this.children[quadrant(point, center, L)].add(point, newL, newCenter);
+			this.children[quadrant(point, center, L)].add(point);
 		}
 	}
 	/**
@@ -105,20 +102,19 @@ public class OctreeNode {
 		}
 	}
 
-	/**
-	 * Return the center of the new smaller cube containing the considered point
-	 * 
-	 * @param point the considered point
-	 * @param center current center of the big cube
-	 * @param L current length of the big cube
-	 * @return (Point_3) the new center of the smaller cube
+	/** 
+	 * center of the smaller cube 
+	 * @param quadrant index of the smaller cube
+	 * @param center center of the current cube
+	 * @param L length of the current cube
+	 * @return Point_3 center
 	 */
 
-	public static Point_3 newCenter(Point_3 point, Point_3 center, double L) {
+	public static Point_3 newCenter(int quadrant, Point_3 center, double L) {
 		Point_3 newCenter = new Point_3();
-		newCenter.x = (point.x <= center.x) ? center.x-L/4 : center.x+L/4;
-		newCenter.y = (point.y <= center.y) ? center.y-L/4 : center.y+L/4;
-		newCenter.z = (point.z <= center.z) ? center.z-L/4 : center.z+L/4;
+		newCenter.x = (quadrant % 8 < 4) ? center.x-L/4 : center.x+L/4;
+		newCenter.y = (quadrant % 4 < 2) ? center.y-L/4 : center.y+L/4;
+		newCenter.z = (quadrant % 2 < 1) ? center.z-L/4 : center.z+L/4;
 		return newCenter;
 	}
 
