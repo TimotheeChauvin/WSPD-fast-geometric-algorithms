@@ -1,5 +1,28 @@
 
 public class WSPD {
+    
+    
+    /**
+     * Return whether the 2 OctreeNodes are well-separated with parameter s.
+     * If each OctreeNode stands for 1 point, both points being distinct, then they are
+     * well-separated.
+     * 
+     * @param n1
+     * @param n2
+     * @param s // well-separatedness parameter
+     * @return // boolean
+     */
+
+    public static boolean areWellSeparated(OctreeNode n1, OctreeNode n2, double s) {
+        if (n1.children == null && n2.children == null) {
+            assert (!n1.p.equals(n2.p));
+            // 2 distinct points: necessary well separated
+            return true;
+        }
+        else {
+            return (Math.max(n1.L, n2.L) <= s * distance(n1, n2));
+        }
+    }
 
     /**
      * Return the distance between cubes defined by OctreeNodes n1 and n2
