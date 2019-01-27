@@ -49,10 +49,11 @@ public class Main {
         points2.add(p6);
         points2.add(p7);
         points2.add(p8);
-
-
-        
-
-    
+        OctreeNode n1 = new OctreeNode(points1);
+        OctreeNode n2 = new OctreeNode(points2);
+        System.out.println(WSPD.distance(n1.children[2], n2));
+        System.out.println(WSPD.areWellSeparated(n1.children[2], n2, 0.1));
+        n1.printThis();
+        n2.printThis();
     }
 }
