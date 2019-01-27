@@ -93,12 +93,12 @@ public class OctreeNode {
 			}
 		}
 		else { // recursion
-			System.out.print("Node[L=" + this.L + "][rep=" + this.p + "](");
+			System.out.print("Node[L=" + this.L + "][center=" + this.center + "](");
 			for (OctreeNode child:this.children) {
 				child.printThis();
-				System.out.print(", ");
+				System.out.println(", ");
 			}
-			System.out.print(")");
+			System.out.println(")");
 		}
 	}
 
