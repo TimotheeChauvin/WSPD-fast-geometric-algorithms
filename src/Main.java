@@ -12,6 +12,7 @@ public class Main {
         Point_3 p4 = new Point_3(9, 2, 2);
         Point_3 p5 = new Point_3(9, 3, 2);
         Point_3 p6 = new Point_3(9, 3, 3);
+        Point_3 p7 = new Point_3(1.5, 2, 3);
         List<Point_3> points = new ArrayList<Point_3>();
         points.add(p1);
         points.add(p2);
@@ -19,11 +20,17 @@ public class Main {
         points.add(p4);
         points.add(p5);
         points.add(p6);
+        points.add(p7);
 
         System.out.println(OctreeNode.findCenter(points));
         System.out.println(OctreeNode.findLength(points));
         OctreeNode oc = new OctreeNode(points);
         oc.printThis();
+
+        OctreeNode n1 = oc.children[0];
+        OctreeNode n2 = oc.children[4];
+
+        
 
     
     }
