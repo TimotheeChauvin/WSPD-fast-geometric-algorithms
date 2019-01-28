@@ -80,27 +80,7 @@ public class OctreeNode {
 			this.children[quadrant(point, center, L)].add(point);
 		}
 	}
-	/**
-	 * prints this OctreeNode recursively
-	 */
-	public void printThis() { 
-		if (this.children == null) {
-			if (this.p == null) {
-				System.out.print("empty");
-			}
-			else {
-				System.out.print(this.p);
-			}
-		}
-		else { // recursion
-			System.out.print("Node[L=" + this.L + "][center=" + this.center + "](");
-			for (OctreeNode child:this.children) {
-				child.printThis();
-				System.out.println(", ");
-			}
-			System.out.println(")");
-		}
-	}
+	
 
 	/** 
 	 * center of the smaller cube 
@@ -233,4 +213,37 @@ public class OctreeNode {
 		return center;
 	}
 
+	public void printPoints() {
+		if (this.children == null && this.p != null) {
+			System.out.print(this.p + ",");
+		}
+		else  if (this.p != null) { // recursion
+			for (OctreeNode child:this.children) {
+				child.printPoints();
+			}
+		}
+	}
+	
+
+	/**
+	 * prints this OctreeNode recursively
+	 */
+	public void printThis() { 
+		if (this.children == null) {
+			if (this.p == null) {
+				System.out.print("empty");
+			}
+			else {
+				System.out.print(this.p);
+			}
+		}
+		else { // recursion
+			System.out.print("Node[L=" + this.L + "][center=" + this.center + "](");
+			for (OctreeNode child:this.children) {
+				child.printThis();
+				System.out.println(", ");
+			}
+			System.out.println(")");
+		}
+	}
 }

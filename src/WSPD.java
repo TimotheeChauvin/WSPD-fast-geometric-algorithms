@@ -2,26 +2,43 @@ import Jcg.geometry.Point_3;
 import java.util.*;
 
 public class WSPD {
-    WSPD wspd;
+    /**
+     * build a complete WSPD with parameter s from an Octree
+     * @param oc octree
+     * @param s WSPD parameter
+     * @return set of arrays of 2 OctreeNodes corresponding to well-separated point sets
+     */
 
-    public WSPD(Octree oc, double s) {
-        this.wspd = computeWSPD(oc.root, oc.root, s);
+    public static Set<OctreeNode[]> buildWSPD(Octree oc, double s) {
+        return WSPDrec(oc.root, oc.root, s);
     }
 
-    public static Set<OctreeNode[]> computeWSPD(OctreeNode n1, OctreeNode n2, double s) {
+    /**
+     * build a partial WSPD with parameter s from two OctreeNodes
+     * @param n1 first OctreeNode
+     * @param n2 second OctreeNode
+     * @param s WSPD parameter
+     * @return set of arrays of 2 OctreeNodes corresponding to well-separated point sets
+     */
+
+    public static Set<OctreeNode[]> WSPDrec(OctreeNode n1, OctreeNode n2, double s) {
         if (n1.level > n2.level) {
-            return computeWSPD(n2, n1, s);
+            return WSPDrec(n2, n1, s);
         }
         if (n1.p == null || n2.p == null || 
             (n1.children == null && n2.children == null && n1.p == n2.p)) {
             return null;
         }
         if (areWellSeparated(n1, n2, s)) {
-            Set<OctreeNode[]> set = new Set<OctreeNode[]>();
+            Set<OctreeNode[]> set = new HashSet<OctreeNode[]>();
             set.add(new OctreeNode[] {n1, n2});
             return set;
         }
-
+        Set<OctreeNode[]> set = new HashSet<OctreeNode[]>();
+        for (OctreeNode c:n1.children){
+            set.addAll(WSPDrec(c, n2, s));
+        }
+        return set;
     }
 
     /**
@@ -34,6 +51,7 @@ public class WSPD {
      * @param s  // well-separatedness parameter
      * @return // boolean
      */
+
 
     public static boolean areWellSeparated(OctreeNode n1, OctreeNode n2, double s) {
         if (n1.children == null && n2.children == null) {
@@ -103,4 +121,14 @@ public class WSPD {
         return Math.sqrt(diffx * diffx + diffy * diffy + diffz * diffz);
     }
 
+
+    public static void printWSPD(Set<OctreeNode[]> wspd){
+        for (OctreeNode[] pair: wspd){
+            System.out.println("Pair:");
+            pair[0].printPoints();
+            System.out.println();
+            pair[1].printPoints();
+            System.out.println();
+        }
+    }
 }
