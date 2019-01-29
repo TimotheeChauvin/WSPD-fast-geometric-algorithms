@@ -30,7 +30,7 @@ public class WSPD {
             // One of the OctreeNodes is empty
             return null;
         }
-        if (n1.children == null && n2.children == null && n1.p == n2.p) {
+        if (n1.children == null && n2.children == null && (n1.p).equals(n2.p)) {
             // if n1 and n2 are the same leaf
             return null;
         }
@@ -40,6 +40,9 @@ public class WSPD {
             return set;
         }
         Set<OctreeNode[]> set = new HashSet<OctreeNode[]>();
+        if (n1.children == null) { // single point not well separated from point set n2: decompose n2
+            return WSPDrec(n2, n1, s);
+        }   
         for (OctreeNode c:n1.children){
             Set<OctreeNode[]> toAdd = WSPDrec(c, n2, s);
             if (toAdd != null) {
@@ -66,7 +69,17 @@ public class WSPD {
             assert (!n1.p.equals(n2.p));
             // 2 distinct points: necessary well separated
             return true;
-        } else {
+        } 
+        if (n1.children == null && n2.children != null){
+            double dist = distance(n1.p, n2);
+            return (n2.L<= s*dist); 
+        } 
+        if (n2.children == null && n1.children != null){
+            double dist = distance(n2.p, n1);
+            return (n1.L<= s*dist); 
+        }
+        
+        else {
             return (Math.max(n1.L, n2.L) <= s * distance(n1, n2));
         }
     }
@@ -128,7 +141,54 @@ public class WSPD {
 
         return Math.sqrt(diffx * diffx + diffy * diffy + diffz * diffz);
     }
+    /**
+     * Returns the distance between a point and the square defined by an OctreeNode
+     * @param point in class Point_3
+     * @param oc OctreeNode
+     * @return the distance as a double
+     */
 
+    public static double distance(Point_3 point, OctreeNode oc) {
+        double x1m = oc.center.x - oc.L / 2; // x min
+        double x1M = oc.center.x + oc.L / 2; // x max
+
+        double y1m = oc.center.y - oc.L / 2;
+        double y1M = oc.center.y + oc.L / 2;
+
+        double z1m = oc.center.z - oc.L / 2;
+        double z1M = oc.center.z + oc.L / 2;
+
+        double diffx;
+        double diffy;
+        double diffz;
+
+        if (x1M < point.x) { // oc left of point
+            diffx = point.x - x1M;
+        } else if (x1m > point.x) { // oc right of point
+            diffx = point.x - x1m;
+        } else { // there is a value of x interpolating both cubes
+            diffx = 0;
+        }
+
+        if (y1M < point.y) { // oc in front of point
+            diffy = point.y - y1M;
+        } else if (y1m > point.y) { // oc behind of point
+            diffy = point.y - y1m;
+        } else { // there is a value of y interpolating both cubes
+            diffy = 0;
+        }
+
+        if (z1M < point.z) { // oc under of point
+            diffz = point.z - z1M;
+        } else if (z1m > point.z) { // oc above of point
+            diffz = point.z - z1m;
+        } else { // there is a value of z interpolating both cubes
+            diffz = 0;
+        }
+
+        return Math.sqrt(diffx * diffx + diffy * diffy + diffz * diffz);
+    }
+    
 
     public static void printWSPD(Set<OctreeNode[]> wspd){
         for (OctreeNode[] pair: wspd){
