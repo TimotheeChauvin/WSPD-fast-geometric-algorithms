@@ -23,10 +23,15 @@ public class WSPD {
 
     public static Set<OctreeNode[]> WSPDrec(OctreeNode n1, OctreeNode n2, double s) {
         if (n1.level > n2.level) {
+            // Make sure n1 is always higher (smaller level)
             return WSPDrec(n2, n1, s);
         }
-        if (n1.p == null || n2.p == null || 
-            (n1.children == null && n2.children == null && n1.p == n2.p)) {
+        if (n1.p == null || n2.p == null) {
+            // One of the OctreeNodes is empty
+            return null;
+        }
+        if (n1.children == null && n2.children == null && n1.p == n2.p) {
+            // if n1 and n2 are the same leaf
             return null;
         }
         if (areWellSeparated(n1, n2, s)) {
@@ -36,7 +41,10 @@ public class WSPD {
         }
         Set<OctreeNode[]> set = new HashSet<OctreeNode[]>();
         for (OctreeNode c:n1.children){
-            set.addAll(WSPDrec(c, n2, s));
+            Set<OctreeNode[]> toAdd = WSPDrec(c, n2, s);
+            if (toAdd != null) {
+                set.addAll(toAdd);
+            }
         }
         return set;
     }
