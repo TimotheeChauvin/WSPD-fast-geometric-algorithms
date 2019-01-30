@@ -65,15 +65,19 @@ public class Main {
         OctreeNode n2 = new OctreeNode(points2);
         Set<OctreeNode[]> wspdPartial = WSPD.WSPDrec(n1, n2, 1.);
         WSPD.printWSPD(wspdPartial);*/
-
-
         points1.add(p5);
         points1.add(p6);
         //points1.add(p7);
         //points1.add(p8);
-        Octree oc = new Octree(points1);
-        oc.root.printThis();
-        Set<Set<OctreeNode>> wspd = WSPD.buildWSPD(oc, 0.5);
-        WSPD.printWSPD(wspd);
+
+        //Octree oc = new Octree(points1);
+        //oc.root.printThis();
+        //Set<Set<OctreeNode>> wspd = WSPD.buildWSPD(oc, 0.5);
+        //WSPD.printWSPD(wspd);
+
+
+        Points_3[] pointsArr = List.toArray(points1);
+        System.out.println(FastClosestPair_3.findClosestPair(pointsArr));
+
     }
 }

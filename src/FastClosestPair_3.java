@@ -1,4 +1,5 @@
 import Jcg.geometry.*;
+import java.util.*;
 
 /**
  * Implementation of a fast algorithm for computing the closest pair,
@@ -17,8 +18,24 @@ public class FastClosestPair_3 implements ClosestPair_3 {
 	 */
     public Point_3[] findClosestPair(Point_3[] points) {
 		if(points.length<2) throw new Error("Error: too few points");
-		
-		throw new Error("To be completed");
-    }
+		List<Point_3> pointsList = Collections.asList(points);
+		Octree oc = Octree(pointsList);
+		Set<Set<OctreeNode>> wspd = WSPD.buildWSPD(oc, 0.5);
+		double minPointsPairDistance = -1.;
+		Point_3[] minPointsPair = new Point_3[2];
+		for (Set<OctreeNode> pair:wspd) {
+			OctreeNode[] pairArray = toArray(pair);
+			boolean arePoints = (pairArray[0].children == null && pairArray[1].children == null); // whether or not the OctreeNodes are lonely points - they can't be empty
+			Point_3 p1 = pairArray[0].p; // representative of the first point set in the pair
+			Point_3 p2 = pairArray[1].p; // representative of the second point set in the pair
+			double distance_p1_p2 = Math.sqrt(Math.pow((p1.x - p2.x), 2) + Math.pow((p1.y - p2.y), 2) + Math.pow((p1.z - p2.z), 2) );
+			if (arePoints && (distance_p1_p2 < minPointsPairDistance || minPointsPairDistance == -1)) {
+				minPointsPairDistance = distance_p1_p2;
+				minPointsPair[0] = p1;
+				minPointsPair[1] = p2;
+			}
+		}
+		return minPointsPair;
+	}
 
 }
