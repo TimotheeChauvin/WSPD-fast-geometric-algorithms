@@ -9,7 +9,7 @@ public class WSPD {
      * @return set of arrays of 2 OctreeNodes corresponding to well-separated point sets
      */
 
-    public static Set<OctreeNode[]> buildWSPD(Octree oc, double s) {
+    public static Set<Set<OctreeNode>> buildWSPD(Octree oc, double s) {
         return WSPDrec(oc.root, oc.root, s);
     }
 
@@ -21,9 +21,12 @@ public class WSPD {
      * @return set of arrays of 2 OctreeNodes corresponding to well-separated point sets
      */
 
-    public static Set<OctreeNode[]> WSPDrec(OctreeNode n1, OctreeNode n2, double s) {
-        if (n1.level > n2.level) {
-            // Make sure n1 is always higher (smaller level)
+    public static Set<Set<OctreeNode>> WSPDrec(OctreeNode n1, OctreeNode n2, double s) {
+        double L1 = n1.children == null ? 0 : n1.L;
+        double L2 = n2.children == null ? 0 : n2.L;
+
+        if (L1 < L2) {
+            // Make sure n1 is always the bigger cube
             return WSPDrec(n2, n1, s);
         }
         if (n1.p == null || n2.p == null) {
@@ -35,16 +38,16 @@ public class WSPD {
             return null;
         }
         if (areWellSeparated(n1, n2, s)) {
-            Set<OctreeNode[]> set = new HashSet<OctreeNode[]>();
-            set.add(new OctreeNode[] {n1, n2});
+            Set<Set<OctreeNode>> set = new HashSet<Set<OctreeNode>>();
+            Set<OctreeNode> pairSet = new HashSet<OctreeNode>();
+            pairSet.add(n1);
+            pairSet.add(n2);
+            set.add(pairSet);
             return set;
         }
-        Set<OctreeNode[]> set = new HashSet<OctreeNode[]>();
-        if (n1.children == null) { // single point not well separated from point set n2: decompose n2
-            return WSPDrec(n2, n1, s);
-        }   
+        Set<Set<OctreeNode>> set = new HashSet<Set<OctreeNode>>();
         for (OctreeNode c:n1.children){
-            Set<OctreeNode[]> toAdd = WSPDrec(c, n2, s);
+            Set<Set<OctreeNode>> toAdd = WSPDrec(c, n2, s);
             if (toAdd != null) {
                 set.addAll(toAdd);
             }
@@ -69,18 +72,18 @@ public class WSPD {
             assert (!n1.p.equals(n2.p));
             // 2 distinct points: necessary well separated
             return true;
-        } 
+        }
         if (n1.children == null && n2.children != null){
             double dist = distance(n1.p, n2);
-            return (n2.L<= s*dist); 
-        } 
+            return (s * n2.L<= dist); 
+        }
         if (n2.children == null && n1.children != null){
             double dist = distance(n2.p, n1);
-            return (n1.L<= s*dist); 
+            return (s * n1.L <= dist); 
         }
         
         else {
-            return (Math.max(n1.L, n2.L) <= s * distance(n1, n2));
+            return (s * Math.max(n1.L, n2.L) <= distance(n1, n2));
         }
     }
 
@@ -190,13 +193,13 @@ public class WSPD {
     }
     
 
-    public static void printWSPD(Set<OctreeNode[]> wspd){
-        for (OctreeNode[] pair: wspd){
+    public static void printWSPD(Set<Set<OctreeNode>> wspd){
+        for (Set<OctreeNode> pair: wspd){
             System.out.println("Pair:");
-            pair[0].printPoints();
-            System.out.println();
-            pair[1].printPoints();
-            System.out.println();
+            for (OctreeNode oc : pair) {
+                oc.printPoints();
+                System.out.println();
+            }
         }
     }
 }

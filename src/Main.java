@@ -73,8 +73,7 @@ public class Main {
         //points1.add(p8);
         Octree oc = new Octree(points1);
         oc.root.printThis();
-        Set<OctreeNode[]> wspd = WSPD.buildWSPD(oc, 0.5);
+        Set<Set<OctreeNode>> wspd = WSPD.buildWSPD(oc, 0.5);
         WSPD.printWSPD(wspd);
-
     }
 }
