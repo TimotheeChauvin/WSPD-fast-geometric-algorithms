@@ -1,4 +1,5 @@
 import Jcg.geometry.*;
+import java.util.*;
 
 /**
  * Implementation of a fast algorithm for computing an approximation of the diameter of a 3D point cloud,
@@ -24,8 +25,24 @@ public class FastDiameter_3 implements Diameter_3 {
 	 */
     public Point_3[] findFarthestPair(Point_3[] points) {
 		if(points.length<2) throw new Error("Error: too few points");
+		List<Point_3> pointsList = Arrays.asList(points);
+		Octree oc = new Octree(pointsList);
+		Set<Set<OctreeNode>> wspd = WSPD.buildWSPD(oc, 2/this.epsilon);
+		double maxPointsPairDistance = 0.;
+		Point_3[] maxPointsPair = new Point_3[2];
+		for (Set<OctreeNode> pair:wspd) {
+			OctreeNode[] pairArr = pair.toArray(new OctreeNode[2]);
+			double dist = Math.sqrt(Math.pow(pairArr[0].p.x - pairArr[1].p.x, 2) 
+									+ Math.pow(pairArr[0].p.y - pairArr[1].p.y, 2)
+									+ Math.pow(pairArr[0].p.z - pairArr[1].p.z, 2));
+			if (dist > maxPointsPairDistance) {
+				maxPointsPairDistance = dist;
+				maxPointsPair[0] = pairArr[0].p;
+				maxPointsPair[1] = pairArr[1].p;
+			}
+		}
+		return maxPointsPair;
 		
-		throw new Error("To be completed");
     }
 
 }
