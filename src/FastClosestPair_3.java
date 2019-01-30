@@ -18,13 +18,13 @@ public class FastClosestPair_3 implements ClosestPair_3 {
 	 */
     public Point_3[] findClosestPair(Point_3[] points) {
 		if(points.length<2) throw new Error("Error: too few points");
-		List<Point_3> pointsList = Collections.asList(points);
-		Octree oc = Octree(pointsList);
+		List<Point_3> pointsList = Arrays.asList(points);
+		Octree oc = new Octree(pointsList);
 		Set<Set<OctreeNode>> wspd = WSPD.buildWSPD(oc, 0.5);
 		double minPointsPairDistance = -1.;
 		Point_3[] minPointsPair = new Point_3[2];
 		for (Set<OctreeNode> pair:wspd) {
-			OctreeNode[] pairArray = toArray(pair);
+			OctreeNode[] pairArray = pair.toArray(new OctreeNode[2]);
 			boolean arePoints = (pairArray[0].children == null && pairArray[1].children == null); // whether or not the OctreeNodes are lonely points - they can't be empty
 			Point_3 p1 = pairArray[0].p; // representative of the first point set in the pair
 			Point_3 p2 = pairArray[1].p; // representative of the second point set in the pair

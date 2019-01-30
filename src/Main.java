@@ -75,9 +75,11 @@ public class Main {
         //Set<Set<OctreeNode>> wspd = WSPD.buildWSPD(oc, 0.5);
         //WSPD.printWSPD(wspd);
 
+        Point_3[] pointsArr = new Point_3[] {p1, p2, p3, p4, p5, p6};
 
-        Points_3[] pointsArr = List.toArray(points1);
-        System.out.println(FastClosestPair_3.findClosestPair(pointsArr));
-
+        FastClosestPair_3 fcpInstance = new FastClosestPair_3();
+        Point_3[] minPointsPair = fcpInstance.findClosestPair(pointsArr);
+        System.out.println(minPointsPair[0]);
+        System.out.println(minPointsPair[1]);
     }
 }
