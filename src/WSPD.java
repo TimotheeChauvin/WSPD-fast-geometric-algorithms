@@ -69,7 +69,7 @@ public class WSPD {
 
     public static boolean areWellSeparated(OctreeNode n1, OctreeNode n2, double s) {
         if (n1.children == null && n2.children == null) {
-            assert (!n1.p.equals(n2.p));
+            assert (!n1.p.equals(n2.p)); // n1 and n2 are the same leaf: handled in WSPDrec
             // 2 distinct points: necessary well separated
             return true;
         }

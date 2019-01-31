@@ -26,8 +26,17 @@ public class FastDiameter_3 implements Diameter_3 {
     public Point_3[] findFarthestPair(Point_3[] points) {
 		if(points.length<2) throw new Error("Error: too few points");
 		List<Point_3> pointsList = Arrays.asList(points);
+	
+		long startTime = System.currentTimeMillis();
 		Octree oc = new Octree(pointsList);
+		System.out.println("Octree (ms): " + (System.currentTimeMillis() - startTime));
+
+		startTime = System.currentTimeMillis();
 		Set<Set<OctreeNode>> wspd = WSPD.buildWSPD(oc, 2/this.epsilon);
+		System.out.println("WSPD (ms): " + (System.currentTimeMillis() - startTime));
+
+		startTime = System.currentTimeMillis();
+
 		double maxPointsPairDistance = 0.;
 		Point_3[] maxPointsPair = new Point_3[2];
 		for (Set<OctreeNode> pair:wspd) {
@@ -41,6 +50,8 @@ public class FastDiameter_3 implements Diameter_3 {
 				maxPointsPair[1] = pairArr[1].p;
 			}
 		}
+
+		System.out.println("FastDiameter computation (ms): " + (System.currentTimeMillis() - startTime));
 		return maxPointsPair;
 		
     }

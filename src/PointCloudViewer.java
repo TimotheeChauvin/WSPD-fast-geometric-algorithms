@@ -84,7 +84,9 @@ public class PointCloudViewer extends PApplet {
 			this.selectedPoints=null;
 			Point_3[] inputPoints=this.points.toArray(); // input point cloud
 			ClosestPair_3 slow=new SlowClosestPair_3();
+			long startTime = System.currentTimeMillis();
 			this.selectedPoints=slow.findClosestPair(inputPoints);
+			System.out.println("slowClosest (ms):" + (System.currentTimeMillis() - startTime));
 		}
 
 		public void fastClosestPair() {
@@ -98,7 +100,9 @@ public class PointCloudViewer extends PApplet {
 			this.selectedPoints=null;
 			Point_3[] inputPoints=this.points.toArray(); // input point cloud
 			Diameter_3 slow=new SlowDiameter_3();
+			long startTime = System.currentTimeMillis();
 			this.selectedPoints=slow.findFarthestPair(inputPoints);
+			System.out.println("slowDiameter (ms):" + (System.currentTimeMillis() - startTime));
 		}
 
 		public void fastDiameter() {
