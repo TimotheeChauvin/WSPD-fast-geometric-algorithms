@@ -13,7 +13,7 @@ public class FastClosestPair_3 implements ClosestPair_3 {
 	/**
 	 * Compute the closest pair of a set of points in 3D space
 	 * 
-	 * @param points the set of points
+	 * @param points the List of points
 	 * @return a pair of closest points
 	 */
     public Point_3[] findClosestPair(Point_3[] points) {
@@ -25,15 +25,14 @@ public class FastClosestPair_3 implements ClosestPair_3 {
 		System.out.println("Octree (ms): " + (System.currentTimeMillis() - startTime));
 
 		startTime = System.currentTimeMillis();
-		Set<Set<OctreeNode>> wspd = WSPD.buildWSPD(oc, 0.5);
+		List<OctreeNode[]> wspd = WSPD.buildWSPD(oc, 1.001);
 		System.out.println("WSPD (ms): " + (System.currentTimeMillis() - startTime));
 
 		startTime = System.currentTimeMillis();
 
 		double minPointsPairDistance = -1.;
 		Point_3[] minPointsPair = new Point_3[2];
-		for (Set<OctreeNode> pair:wspd) {
-			OctreeNode[] pairArray = pair.toArray(new OctreeNode[2]);
+		for (OctreeNode[] pairArray:wspd) {
 			boolean arePoints = (pairArray[0].children.isEmpty() && pairArray[1].children.isEmpty()); // whether or not the OctreeNodes are lonely points - they can't be empty
 			Point_3 p1 = pairArray[0].p; // representative of the first point set in the pair
 			Point_3 p2 = pairArray[1].p; // representative of the second point set in the pair

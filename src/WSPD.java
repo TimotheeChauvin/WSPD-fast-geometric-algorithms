@@ -6,10 +6,10 @@ public class WSPD {
      * build a complete WSPD with parameter s from an Octree
      * @param oc octree
      * @param s WSPD parameter
-     * @return set of arrays of 2 OctreeNodes corresponding to well-separated point sets
+     * @return List of arrays of 2 OctreeNodes corresponding to well-separated point Lists
      */
 
-    public static Set<Set<OctreeNode>> buildWSPD(Octree oc, double s) {
+    public static List<OctreeNode[]> buildWSPD(Octree oc, double s) {
         return WSPDrec(oc.root, oc.root, s);
     }
 
@@ -18,10 +18,10 @@ public class WSPD {
      * @param n1 first OctreeNode
      * @param n2 second OctreeNode
      * @param s WSPD parameter
-     * @return set of arrays of 2 OctreeNodes corresponding to well-separated point sets
+     * @return List of arrays of 2 OctreeNodes corresponding to well-separated point Lists
      */
 
-    public static Set<Set<OctreeNode>> WSPDrec(OctreeNode n1, OctreeNode n2, double s) {
+    public static List<OctreeNode[]> WSPDrec(OctreeNode n1, OctreeNode n2, double s) {
         // System.out.println();
         double L1 = n1.children.isEmpty() ? 0 : n1.L;
         double L2 = n2.children.isEmpty() ? 0 : n2.L;
@@ -48,27 +48,23 @@ public class WSPD {
         
         if (areWellSeparated(n1, n2, s)) {
             // System.out.println("well separated pair");
-            Set<Set<OctreeNode>> set = new HashSet<Set<OctreeNode>>();
-            Set<OctreeNode> pairSet = new HashSet<OctreeNode>();
-            pairSet.add(n1);
-            pairSet.add(n2);
-            set.add(pairSet);
-            int count = 0;
-            for (OctreeNode oc : pairSet) {
-                // System.out.println(oc.p);
-            }
-            return set;
+            List<OctreeNode[]> pairList = new LinkedList<OctreeNode[]>();
+            OctreeNode[] pairAsArray = new OctreeNode[2];
+            pairAsArray[0] = n1;
+            pairAsArray[1] = n2;
+            pairList.add(pairAsArray);
+            return pairList;
         }
         
-        Set<Set<OctreeNode>> set = new HashSet<Set<OctreeNode>>();
+        List<OctreeNode[]> pairList = new LinkedList<OctreeNode[]>();
         // System.out.println("decompose");
         for (OctreeNode c:n1.children){
-            Set<Set<OctreeNode>> toAdd = WSPDrec(c, n2, s);
+            List<OctreeNode[]> toAdd = WSPDrec(c, n2, s);
             if (toAdd != null) {
-                set.addAll(toAdd);
+                pairList.addAll(toAdd); // MUST HANDLE REDUNDANCIES - NOT YET SOLVED
             }
         }
-        return set;
+        return pairList;
     }
 
     /**
@@ -209,14 +205,14 @@ public class WSPD {
     }
     
 
-    public static void printWSPD(Set<Set<OctreeNode>> wspd){
-        for (Set<OctreeNode> pair: wspd){
+    public static void printWSPD(List<OctreeNode[]> wspd){
+        for (OctreeNode[] pair: wspd){
+            System.out.println();
             System.out.println("Pair:");
-            for (OctreeNode oc : pair) {
-                // System.out.println("test");
-                oc.printPoints();
-                System.out.println();
-            }
+            pair[0].printPoints();
+            System.out.println();
+            pair[1].printPoints();
+            System.out.println();
         }
     }
 }
