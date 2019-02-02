@@ -257,7 +257,8 @@ public class OctreeNode {
 			System.out.print(this.p);
 		}
 		else { // recursion
-			System.out.println("Node[L=" + this.L + "][center=" + this.center + "](");
+			System.out.println("Node[L=" + this.L + "]" + "[center=" + this.center + "]"
+					+ "[rep=" + this.p + "]" + "(");
 			for (OctreeNode child:this.children) {
 				child.printThis();
 				System.out.println(", ");

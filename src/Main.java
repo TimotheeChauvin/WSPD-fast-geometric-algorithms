@@ -15,6 +15,7 @@ public class Main {
 
         Point_3[] pointsArr = new Point_3[] {p1, p2, p3, p4, p5, p6};
         Octree oc = new Octree(Arrays.asList(pointsArr));
+        oc.root.printThis();
         List<OctreeNode[]> wspd = WSPD.buildWSPD(oc, 0.5);
         System.out.println();
         WSPD.printWSPD(wspd);
