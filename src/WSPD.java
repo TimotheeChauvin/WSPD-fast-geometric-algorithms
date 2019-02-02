@@ -22,47 +22,46 @@ public class WSPD {
      */
 
     public static Set<Set<OctreeNode>> WSPDrec(OctreeNode n1, OctreeNode n2, double s) {
-        System.out.println();
-        double L1 = n1.children == null ? 0 : n1.L;
-        double L2 = n2.children == null ? 0 : n2.L;
-        System.out.println("n1 representative = " + n1.p);
-        System.out.println("n1 length = " + L1);
-        System.out.println("n2 representative = " + n2.p);
-        System.out.println("n2 length = " + L2);
+        // System.out.println();
+        double L1 = n1.children.isEmpty() ? 0 : n1.L;
+        double L2 = n2.children.isEmpty() ? 0 : n2.L;
+        // System.out.println("n1 representative = " + n1.p);
+        // System.out.println("n1 length = " + L1);
+        // System.out.println("n2 representative = " + n2.p);
+        // System.out.println("n2 length = " + L2);
         
-        if (n1.p == null || n2.p == null) {
-            System.out.println("one is empty");
-            // One of the OctreeNodes is empty
+        assert (n1.p != null && n2.p != null);
+        
+        
+
+        if (L1 < L2) {
+            // System.out.println("swap");
+            // Make sure n1 is always the bigger cube
+            return WSPDrec(n2, n1, s);
+        }
+        
+        if (n1.children.isEmpty() && n2.children.isEmpty() && (n1.p).equals(n2.p)) {
+            // System.out.println("same leaf");
+            // if n1 and n2 are the same leaf
             return null;
         }
-
+        
         if (areWellSeparated(n1, n2, s)) {
-            System.out.println("well separated pair");
+            // System.out.println("well separated pair");
             Set<Set<OctreeNode>> set = new HashSet<Set<OctreeNode>>();
             Set<OctreeNode> pairSet = new HashSet<OctreeNode>();
             pairSet.add(n1);
             pairSet.add(n2);
             set.add(pairSet);
+            int count = 0;
             for (OctreeNode oc : pairSet) {
-                System.out.println(oc.p);
+                // System.out.println(oc.p);
             }
             return set;
         }
-
-        if (L1 < L2) {
-            System.out.println("swap");
-            // Make sure n1 is always the bigger cube
-            return WSPDrec(n2, n1, s);
-        }
-        
-        if (n1.children == null && n2.children == null && (n1.p).equals(n2.p)) {
-            System.out.println("same leaf");
-            // if n1 and n2 are the same leaf
-            return null;
-        }
         
         Set<Set<OctreeNode>> set = new HashSet<Set<OctreeNode>>();
-        System.out.println("decompose");
+        // System.out.println("decompose");
         for (OctreeNode c:n1.children){
             Set<Set<OctreeNode>> toAdd = WSPDrec(c, n2, s);
             if (toAdd != null) {
@@ -85,16 +84,16 @@ public class WSPD {
 
 
     public static boolean areWellSeparated(OctreeNode n1, OctreeNode n2, double s) {
-        if (n1.children == null && n2.children == null) {
+        if (n1.children.isEmpty() && n2.children.isEmpty()) {
             assert (!n1.p.equals(n2.p)); // n1 and n2 are the same leaf: handled in WSPDrec
             // 2 distinct points: necessary well separated
             return true;
         }
-        if (n1.children == null && n2.children != null){
+        if (n1.children.isEmpty() && !n2.children.isEmpty()){
             double dist = distance(n1.p, n2);
             return (s * n2.L<= dist); 
         }
-        if (n2.children == null && n1.children != null){
+        if (n2.children.isEmpty() && !n1.children.isEmpty()){
             double dist = distance(n2.p, n1);
             return (s * n1.L <= dist); 
         }
@@ -214,6 +213,7 @@ public class WSPD {
         for (Set<OctreeNode> pair: wspd){
             System.out.println("Pair:");
             for (OctreeNode oc : pair) {
+                // System.out.println("test");
                 oc.printPoints();
                 System.out.println();
             }

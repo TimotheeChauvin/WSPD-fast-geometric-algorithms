@@ -243,7 +243,7 @@ public class OctreeNode {
 		}
 		else {
 			for (OctreeNode child:this.children) {
-					child.printPoints();
+				child.printPoints();
 			}
 		}
 	}
