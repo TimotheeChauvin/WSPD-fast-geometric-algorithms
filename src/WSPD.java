@@ -87,15 +87,15 @@ public class WSPD {
         }
         if (n1.children.isEmpty() && !n2.children.isEmpty()){
             double dist = distance(n1.p, n2);
-            return (s * n2.L<= dist); 
+            return (s * n2.L * Math.sqrt(3) <= dist);
         }
         if (n2.children.isEmpty() && !n1.children.isEmpty()){
             double dist = distance(n2.p, n1);
-            return (s * n1.L <= dist); 
+            return (s * n1.L * Math.sqrt(3) <= dist);
         }
         
         else {
-            return (s * Math.max(n1.L, n2.L) <= distance(n1, n2));
+            return (s * Math.max(n1.L, n2.L) * Math.sqrt(3) <= distance(n1, n2));
         }
     }
 
