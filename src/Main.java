@@ -14,7 +14,10 @@ public class Main {
         Point_3 p6 = new Point_3(6, 9, 0);
 
         Point_3[] pointsArr = new Point_3[] {p1, p2, p3, p4, p5, p6};
+        Octree oc = new Octree(Arrays.asList(pointsArr));
+        oc.root.printPoints();
 
+        // Set<Set<OctreeNode>> wspd = WSPD.buildWSPD(oc, 0.5);
         // FastClosestPair_3 fcpInstance = new FastClosestPair_3();
         // Point_3[] minPointsPair = fcpInstance.findClosestPair(pointsArr);
         // System.out.println(minPointsPair[0]);
@@ -24,7 +27,6 @@ public class Main {
         // Point_3[] diamPointPair = fdInstance.findFarthestPair(pointsArr);
         // System.out.println(diamPointPair[0]);
         // System.out.println(diamPointPair[1]);
-
         
 
     }

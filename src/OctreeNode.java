@@ -1,5 +1,4 @@
-import java.util.List;
-
+import java.util.*;
 import Jcg.geometry.Point_3;
 
 /**
@@ -12,7 +11,8 @@ import Jcg.geometry.Point_3;
 public class OctreeNode {
 	public double L;
 	public int level;
-	public OctreeNode[] children = null;
+	public int quadrant;
+	public List<OctreeNode> children;
 	public OctreeNode father;
 	public Point_3 p; // point stored in a leaf
 	public Point_3 center;
@@ -26,7 +26,8 @@ public class OctreeNode {
 		this.L = findLength(points);
 		this.center = findCenter(points);
 		this.level = 0;
-		this.children = null;
+		this.quadrant = -1; // original OctreeNode isn't inside any quadrant
+		this.children = new LinkedList<OctreeNode>();
 		this.father = null;
 		this.p = null;
 		for (Point_3 p : points) {
@@ -40,10 +41,11 @@ public class OctreeNode {
 	 * @param father
 	 */
 
-	public OctreeNode(int level, OctreeNode father, double L, Point_3 center) {
+	public OctreeNode(int level, OctreeNode father, double L, Point_3 center, int quadrant) {
 		this.L = L;
 		this.level = level;
-		this.children = null;
+		this.children = new LinkedList<OctreeNode>();
+		this.quadrant = quadrant;
 		this.father = father;
 		this.center = center;
 	}
@@ -55,29 +57,40 @@ public class OctreeNode {
 	 */
 
 	public void add(Point_3 point) {
-		if (this.children == null) { // only one level
+		if (this.children.isEmpty()) { // only one level
 			if (this.p == null) { // no point yet
 				this.p = point;
 			}
 			else { // only one level, already one point
-				this.children = new OctreeNode[8];
-				for (int i = 0; i < 8; i++) {
-					Point_3 newCenter = newCenter(i, this.center, this.L);
-					this.children[i] = new OctreeNode(this.level+1, this, this.L/2, newCenter);
+				int pQuadrant = quadrant(this.p, this.center, this.L);
+				int pointQuadrant = quadrant(point, this.center, this.L);
+				if (pQuadrant != pointQuadrant) { // points are in different quadrants
+					OctreeNode pOcToAdd = new OctreeNode(this.level+1, this, this.L/2,newCenter(pQuadrant, this.center, this.L) ,pQuadrant);
+					pOcToAdd.p = this.p;
+					pOcToAdd.quadrant = pQuadrant;
+					this.children.add(pOcToAdd);
+
+					OctreeNode pointOcToAdd = new OctreeNode(this.level+1, this, this.L/2,newCenter(pointQuadrant, this.center, this.L) ,pointQuadrant) ;
+					pointOcToAdd.p = point;
+					pointOcToAdd.quadrant = pointQuadrant;
+					this.children.add(pointOcToAdd);
 				}
-				if (quadrant(this.p, center, this.L) != quadrant(point, this.center, this.L)) { // points are in different quadrants
-					this.children[quadrant(this.p, this.center, this.L)].p = p;
-					this.children[quadrant(point, this.center, this.L)].p = point;
-				}
-				else { // points in the same quadrant: we need to recurse
-					this.children[quadrant(this.p, this.center, this.L)].p = p;
-					// Now we consider the new smaller cube defined by quadrant(this.p)
-					this.children[quadrant(point, this.center, this.L)].add(point);
+				else { // points in the same quadrant: we need to recurse in this quadrant
+					OctreeNode rec = new OctreeNode(this.level+1, this, this.L/2,newCenter(pQuadrant, this.center, this.L) ,pQuadrant);
+					rec.p = this.p;
+					rec.quadrant = pQuadrant;
+					this.children.add(rec);
+					rec.add(point);
 				}
 			}
 		}
 		else { // adding to an OctreeNode with children: add recursively
-			this.children[quadrant(point, center, L)].add(point);
+			int pointQuadrant = quadrant(point, this.center, this.L);
+			for (OctreeNode child:this.children) {
+				if (child.quadrant == pointQuadrant) {
+					child.add(point);
+				}
+			}
 		}
 	}
 	
@@ -214,12 +227,12 @@ public class OctreeNode {
 	}
 
 	public void printPoints() {
-		if (this.children == null && this.p != null) {
+		if (this.children.isEmpty()) {
 			System.out.print(this.p + ",");
 		}
-		else  if (this.p != null) { // recursion
+		else {
 			for (OctreeNode child:this.children) {
-				child.printPoints();
+					child.printPoints();
 			}
 		}
 	}
@@ -229,13 +242,8 @@ public class OctreeNode {
 	 * prints this OctreeNode recursively
 	 */
 	public void printThis() { 
-		if (this.children == null) {
-			if (this.p == null) {
-				System.out.print("empty");
-			}
-			else {
-				System.out.print(this.p);
-			}
+		if (this.children.isEmpty()) {
+			System.out.print(this.p);
 		}
 		else { // recursion
 			System.out.println("Node[L=" + this.L + "][center=" + this.center + "](");
