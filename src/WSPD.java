@@ -203,6 +203,14 @@ public class WSPD {
 
         return Math.sqrt(diffx * diffx + diffy * diffy + diffz * diffz);
     }
+
+    /**
+     * Return the distance between 2 points (Point_3).
+     */
+    
+    public static double distance(Point_3 p1, Point_3 p2) {
+        return Math.sqrt(Math.pow(p1.x-p2.x, 2) + Math.pow(p1.y-p2.y, 2) + Math.pow(p1.z-p2.z, 2));
+    }
     
 
     public static void printWSPD(List<OctreeNode[]> wspd){

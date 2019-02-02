@@ -36,7 +36,7 @@ public class FastClosestPair_3 implements ClosestPair_3 {
 			boolean arePoints = (pairArray[0].children.isEmpty() && pairArray[1].children.isEmpty()); // whether or not the OctreeNodes are lonely points - they can't be empty
 			Point_3 p1 = pairArray[0].p; // representative of the first point set in the pair
 			Point_3 p2 = pairArray[1].p; // representative of the second point set in the pair
-			double distance_p1_p2 = Math.sqrt(Math.pow((p1.x - p2.x), 2) + Math.pow((p1.y - p2.y), 2) + Math.pow((p1.z - p2.z), 2) );
+			double distance_p1_p2 = WSPD.distance(p1, p2);
 			if (arePoints && (distance_p1_p2 < minPointsPairDistance || minPointsPairDistance == -1)) {
 				minPointsPairDistance = distance_p1_p2;
 				minPointsPair[0] = p1;

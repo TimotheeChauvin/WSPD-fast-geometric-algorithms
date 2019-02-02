@@ -39,9 +39,7 @@ public class FastDiameter_3 implements Diameter_3 {
 		double maxPointsPairDistance = 0.;
 		Point_3[] maxPointsPair = new Point_3[2];
 		for (OctreeNode[] pairArr:wspd) {
-			double dist = Math.sqrt(Math.pow(pairArr[0].p.x - pairArr[1].p.x, 2) 
-									+ Math.pow(pairArr[0].p.y - pairArr[1].p.y, 2)
-									+ Math.pow(pairArr[0].p.z - pairArr[1].p.z, 2));
+			double dist = WSPD.distance(pairArr[0], pairArr[1]);
 			if (dist > maxPointsPairDistance) {
 				maxPointsPairDistance = dist;
 				maxPointsPair[0] = pairArr[0].p;

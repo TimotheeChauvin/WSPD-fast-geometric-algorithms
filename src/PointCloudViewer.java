@@ -85,15 +85,26 @@ public class PointCloudViewer extends PApplet {
 			Point_3[] inputPoints=this.points.toArray(); // input point cloud
 			ClosestPair_3 slow=new SlowClosestPair_3();
 			long startTime = System.currentTimeMillis();
-			this.selectedPoints=slow.findClosestPair(inputPoints);
-			System.out.println("slowClosest (ms):" + (System.currentTimeMillis() - startTime));
+			Point_3[] closestPair = slow.findClosestPair(inputPoints);
+			System.out.println("slowClosest time (ms): " + (System.currentTimeMillis() - startTime));
+			System.out.println("slowClosest pair: " + closestPair[0] + ";" + closestPair[1]);
+			System.out.println("slowClosest distance: " + WSPD.distance(closestPair[0], closestPair[1]));
+			System.out.println();
+			this.selectedPoints=closestPair;
+			
 		}
 
 		public void fastClosestPair() {
 			this.selectedPoints=null;
 			Point_3[] inputPoints=this.points.toArray(); // input point cloud
-			ClosestPair_3 slow=new FastClosestPair_3();
-			this.selectedPoints=slow.findClosestPair(inputPoints);
+			ClosestPair_3 fast=new FastClosestPair_3();
+			long startTime = System.currentTimeMillis();
+			Point_3[] closestPair = fast.findClosestPair(inputPoints);
+			System.out.println("fastClosest time (ms): " + (System.currentTimeMillis() - startTime));
+			System.out.println("fastClosest pair: " + closestPair[0] + " ; " + closestPair[1]);
+			System.out.println("fastClosest distance: " + WSPD.distance(closestPair[0], closestPair[1]));
+			System.out.println();
+			this.selectedPoints=closestPair;
 		}
 
 		public void slowDiameter() {
@@ -101,16 +112,26 @@ public class PointCloudViewer extends PApplet {
 			Point_3[] inputPoints=this.points.toArray(); // input point cloud
 			Diameter_3 slow=new SlowDiameter_3();
 			long startTime = System.currentTimeMillis();
-			this.selectedPoints=slow.findFarthestPair(inputPoints);
-			System.out.println("slowDiameter (ms):" + (System.currentTimeMillis() - startTime));
+			Point_3[] farthestPair = slow.findFarthestPair(inputPoints);
+			System.out.println("slowDiameter time (ms): " + (System.currentTimeMillis() - startTime));
+			System.out.println("slowDiameter pair: " + farthestPair[0] + " ; " + farthestPair[1]);
+			System.out.println("slowDiameter distance: " + WSPD.distance(farthestPair[0], farthestPair[1]));
+			System.out.println();
+			this.selectedPoints=farthestPair;
 		}
 
 		public void fastDiameter() {
 			double epsilon=0.7; // approximation factor
 			this.selectedPoints=null;
 			Point_3[] inputPoints=this.points.toArray(); // input point cloud
-			Diameter_3 slow=new FastDiameter_3(epsilon);
-			this.selectedPoints=slow.findFarthestPair(inputPoints);
+			Diameter_3 fast=new FastDiameter_3(epsilon);
+			long startTime = System.currentTimeMillis();
+			Point_3[] farthestPair = fast.findFarthestPair(inputPoints);
+			System.out.println("fastDiameter time (ms): " + (System.currentTimeMillis() - startTime));
+			System.out.println("fastDiameter pair: " + farthestPair[0] + " ; " + farthestPair[1]);
+			System.out.println("fastDiameter distance: " + WSPD.distance(farthestPair[0], farthestPair[1]));
+			System.out.println();
+			this.selectedPoints=farthestPair;
 		}
 
 		public void zoomIn() {
