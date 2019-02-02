@@ -1,16 +1,35 @@
-;;Slow Closest;Slow Diameter; Fast Closest; Fast Diameter, epsilon = 0.7
- Torus_33;Octree;0;0;1;0
-33;WSPD;;;6;4
-;Task;;;1;0
-Nefertiti;Octree;11;11;4;1
-299;WSPD;;;35;100
-;Task;;;9;26
-Bague;Octree;64;47;17;5
-2652;WSPD;;;272;1730
-;Task;;;84;121
-Triceratops;Octree;76;62;12;8
-2832;WSPD;;;234;1735
-;Task;;;79;116
-Horse;Octree;2258;2071;48;21
-20000;WSPD;;;2091;18611
-;Task;;;237;987
+Uncompressed Octree,,,,,
+,,Slow Closest,Slow Diameter, Fast Closest, Fast Diameter (epsilon = 0.7)
+ Torus_33,Octree,0,0,1,0
+33,WSPD,,,6,4
+,Task,,,1,0
+Nefertiti,Octree,11,11,4,1
+299,WSPD,,,35,100
+,Task,,,9,26
+Bague,Octree,64,47,17,5
+2652,WSPD,,,272,1730
+,Task,,,84,121
+Triceratops,Octree,76,62,12,8
+2832,WSPD,,,234,1735
+,Task,,,79,116
+Horse,Octree,2258,2071,48,21
+20000,WSPD,,,2091,18611
+,Task,,,237,987
+,,,,,
+Mildly compressed Octree using LinkedLists,,,,,
+,,Slow Closest,Slow Diameter, Fast Closest, Fast Diameter (epsilon = 0.7)
+ Torus_33,Octree,0,0,1,1
+33,WSPD,,,11,12
+,Task,,,1,1
+Nefertiti,Octree,11,11,5,2
+299,WSPD,,,41,92
+,Task,,,9,25
+Bague,Octree,74,46,15,8
+2652,WSPD,,,343,1895
+,Task,,,94,121
+Triceratops,Octree,79,68,15,12
+2832,WSPD,,,321,1429
+,Task,,,89,110
+Horse,Octree,2025,1666,84,37
+20000,WSPD,,,2673,16781
+,Task,,,234,843
