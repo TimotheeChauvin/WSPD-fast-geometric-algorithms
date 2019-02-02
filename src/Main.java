@@ -15,7 +15,6 @@ public class Main {
 
         Point_3[] pointsArr = new Point_3[] {p1, p2, p3, p4, p5, p6};
         Octree oc = new Octree(Arrays.asList(pointsArr));
-        oc.root.printPoints();
 
         // Set<Set<OctreeNode>> wspd = WSPD.buildWSPD(oc, 0.5);
         // FastClosestPair_3 fcpInstance = new FastClosestPair_3();

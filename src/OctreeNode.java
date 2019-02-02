@@ -57,39 +57,50 @@ public class OctreeNode {
 	 */
 
 	public void add(Point_3 point) {
-		if (this.children.isEmpty()) { // only one level
-			if (this.p == null) { // no point yet
-				this.p = point;
-			}
-			else { // only one level, already one point
-				int pQuadrant = quadrant(this.p, this.center, this.L);
-				int pointQuadrant = quadrant(point, this.center, this.L);
-				if (pQuadrant != pointQuadrant) { // points are in different quadrants
-					OctreeNode pOcToAdd = new OctreeNode(this.level+1, this, this.L/2,newCenter(pQuadrant, this.center, this.L) ,pQuadrant);
-					pOcToAdd.p = this.p;
-					pOcToAdd.quadrant = pQuadrant;
-					this.children.add(pOcToAdd);
+		int pointQuadrant = quadrant(point, this.center, this.L);
 
-					OctreeNode pointOcToAdd = new OctreeNode(this.level+1, this, this.L/2,newCenter(pointQuadrant, this.center, this.L) ,pointQuadrant) ;
-					pointOcToAdd.p = point;
-					pointOcToAdd.quadrant = pointQuadrant;
-					this.children.add(pointOcToAdd);
-				}
-				else { // points in the same quadrant: we need to recurse in this quadrant
-					OctreeNode rec = new OctreeNode(this.level+1, this, this.L/2,newCenter(pQuadrant, this.center, this.L) ,pQuadrant);
-					rec.p = this.p;
-					rec.quadrant = pQuadrant;
-					this.children.add(rec);
-					rec.add(point);
-				}
+		if (this.p == null) {
+			// There isn't any point yet, this is the first point added
+			this.p = point;
+			return;
+		}
+
+		if (this.children.isEmpty()) { // Lonely point without children
+			int pQuadrant = quadrant(this.p, this.center, this.L);
+
+			// We'll have to add a new child with our current point whatever happens
+			OctreeNode pOcToAdd = new OctreeNode(this.level+1, this, this.L/2,newCenter(pQuadrant, this.center, this.L), pQuadrant);
+			pOcToAdd.p = this.p;
+			pOcToAdd.quadrant = pQuadrant;
+			this.children.add(pOcToAdd);
+			
+			if (pQuadrant != pointQuadrant) { // points are in different quadrants
+				OctreeNode pointOcToAdd = new OctreeNode(this.level+1, this, this.L/2,newCenter(pointQuadrant, this.center, this.L), pointQuadrant) ;
+				pointOcToAdd.p = point;
+				pointOcToAdd.quadrant = pointQuadrant;
+				this.children.add(pointOcToAdd);
+			}
+
+			else { // points in the same quadrant: we need to recurse in this quadrant
+				pOcToAdd.add(point);
 			}
 		}
-		else { // adding to an OctreeNode with children: add recursively
-			int pointQuadrant = quadrant(point, this.center, this.L);
+
+		else { // adding to an OctreeNode with children
+			boolean quadrantAlreadyThere = false;
 			for (OctreeNode child:this.children) {
 				if (child.quadrant == pointQuadrant) {
+					// Quadrant already occupied: add recursively
 					child.add(point);
+					quadrantAlreadyThere = true;
 				}
+			}
+			if (quadrantAlreadyThere == false) {
+				// The quadrant of our point is free
+				OctreeNode pointOcToAdd = new OctreeNode(this.level+1, this, this.L/2,newCenter(pointQuadrant, this.center, this.L), pointQuadrant) ;
+				pointOcToAdd.p = point;
+				pointOcToAdd.quadrant = pointQuadrant;
+				this.children.add(pointOcToAdd);
 			}
 		}
 	}
