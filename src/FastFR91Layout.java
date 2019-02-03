@@ -48,14 +48,14 @@ public class FastFR91Layout extends Layout {
 		int N=g.sizeVertices();
 		
 		// set the parameters of the algorithm FR91
-		this.C=1.;
+		this.C=5.;
 		this.w=w;
 		this.h=h;
-		this.area=w*h/100;
+		this.area=w*h;
 		this.k=C*Math.sqrt(area/N);
-		this.temperature=w/5.; // the temperature is a fraction of the width of the drawing area
-		this.minTemperature=0.05;
-		this.coolingConstant=0.98;
+		this.temperature=w/2.; // the temperature is a fraction of the width of the drawing area
+		this.minTemperature=0.1;
+		this.coolingConstant=0.97;
 		this.s = 1; // TODO decide which value to use
 		this.hm = new HashMap<Point_3, Vector_3>(N, (float) 1.);
 		
