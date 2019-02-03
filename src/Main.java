@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
         Point_3 p1 = new Point_3(1, 9, 0);
         Point_3 p2 = new Point_3(4, 9, 0);
-        Point_3 p3 = new Point_3(4, 1, 0);
+        Point_3 p3 = new Point_3(4, 7, 0);
         Point_3 p4 = new Point_3(2, 3, 0);
         Point_3 p5 = new Point_3(7, 4, 0);
         Point_3 p6 = new Point_3(6, 9, 0);

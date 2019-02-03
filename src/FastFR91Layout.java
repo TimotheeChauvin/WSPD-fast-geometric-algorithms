@@ -22,6 +22,7 @@ public class FastFR91Layout extends Layout {
 	public double minTemperature; // minimal temperature (strictly positive)
 	public double coolingConstant; // constant term: the temperature decreases linearly at each iteration
 	public boolean useCooling; // say whether performing simulated annealing
+	public double s; // well-separatedness parameter for our WSPD
 	
 	public int iterationCount=0; // count the number of performed iterations
 	private int countRepulsive=0; // count the number of computed repulsive forces (to measure time performances)
@@ -54,6 +55,7 @@ public class FastFR91Layout extends Layout {
 		this.temperature=w/5.; // the temperature is a fraction of the width of the drawing area
 		this.minTemperature=0.05;
 		this.coolingConstant=0.98;
+		this.s = 1; // TODO decide which value to use
 		
 		System.out.println("done ("+N+" nodes)");
 		//System.out.println("k="+k+" - temperature="+temperature);
@@ -86,13 +88,11 @@ public class FastFR91Layout extends Layout {
 	 * @return 'disp' a 3d vector storing the displacement of vertex 'u'
 	 */	
 	private Vector_3 computeAttractiveForce(Node u) {
-		//throw new Error("To be completed: question 1");
 		Vector_3 attractive_force = new Vector_3(0,0,0);
 		
 		for(Node temp : u.neighbors)
 		{
 			double distance = u.p.distanceFrom(temp.p).doubleValue();
-			//double aF = distance * distance / this.k;
 			double aF = attractiveForce(distance);
 			attractive_force.x += (temp.p.x - u.p.x) / distance * aF;
 			attractive_force.y += (temp.p.y - u.p.y) / distance * aF; 
@@ -100,6 +100,41 @@ public class FastFR91Layout extends Layout {
 		}
 		return attractive_force;		
 	}
+
+	/**
+	 * Compute, for each vertex, the displacement due to attractive forces (between neighboring nodes)
+	 * 
+	 * @return a vector v[]: v[i] stores the geometric displacement of the i-th node
+	 */	
+	private Vector_3[] computeAllAttractiveForces() {
+		Vector_3[] teta = new Vector_3[g.sizeVertices()];
+		int i=0;
+		for (Node v : g.vertices){
+			teta[i]=computeAttractiveForce(v);
+			i++;
+		}
+		return teta;
+	}
+
+
+
+	private Vector_3[] computeAllRepulsiveForces() {
+		// TODO
+		ArrayList<Point_3> pointsList;
+		for (Node n: this.g.vertices) {
+			// Node contains a "p" (point) field
+			pointsList.add(n.p);
+		}
+
+		Octree oc = new Octree(pointsList);
+		List<OctreeNode[]> wspd = WSPD.buildWSPD(oc, this.s);
+		for (OctreeNode[] pair: wspd) {
+			OctreeNode n1 = pair[0];
+			OctreeNode n2 = pair[1];
+			
+		}
+	}
+
 
 	/**
 	 * Perform one iteration of the Force-Directed algorithm.
@@ -111,13 +146,21 @@ public class FastFR91Layout extends Layout {
 		System.out.print("Performing iteration (fast FR91): "+this.iterationCount);
 		long startTime=System.nanoTime(), endTime; // for evaluating time performances
 		
-		// ---------- Complete this function ---
-		// make use of the WSPD to approximate repulsive forces
-		System.out.println("\n\n--------------------------------------------");
-		System.out.println("--- Not yet implemented: to be completed ---");
-		System.out.println("--------------------------------------------");
+		Vector_3[] tetaRepulsive = computeAllRepulsiveForces();  // compute the displacements due to repulsive forces (for each vertex)
+		Vector_3[] tetaAttractive = computeAllAttractiveForces(); // compute the displacements due to attractive forces (for each vertex)
+		Vector_3 teta;  
+		double norm;
+		int i =0;
 		
-		// ----------
+		// second step: compute the total displacements and move all nodes to their new locations
+		for (Node u:g.vertices){
+			teta=tetaRepulsive[i].sum(tetaAttractive[i]); // compute total displacement
+			norm=Math.sqrt((double) teta.squaredLength());  // norm of teta
+			if (norm!=0){
+				u.setPoint(u.p.sum(teta.multiplyByScalar(Math.min(temperature,norm)/norm))); //modify coordinates of u in accordance with computed forces
+			}
+			i++;
+		}
 		
 		// evaluate time performances
     	endTime=System.nanoTime();

@@ -53,7 +53,7 @@ public class OctreeNode {
 		this.father = father;
 		this.center = center;
 		this.barycenter = null;
-		this.numberPoints = 0;
+		this.numberPoints = 1;
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class OctreeNode {
 		if (this.p == null) {
 			// There isn't any point yet, this is the first point added
 			this.p = point;
-			this.barycenter = point;
+			this.barycenter = new Point_3(point.x, point.y, point.z);
 			this.numberPoints = 1;
 			return;
 		}
@@ -89,7 +89,7 @@ public class OctreeNode {
 				OctreeNode pointOcToAdd = new OctreeNode(this.level+1, this, this.L/2,newCenter(pointQuadrant, this.center, this.L), pointQuadrant) ;
 				pointOcToAdd.p = point;
 				pointOcToAdd.quadrant = pointQuadrant;
-				pointOcToAdd.barycenter = point;
+				pointOcToAdd.barycenter = new Point_3(point.x, point.y, point.z);
 				this.children.add(pointOcToAdd);
 			}
 
@@ -111,7 +111,7 @@ public class OctreeNode {
 				// The quadrant of our point is free
 				OctreeNode pointOcToAdd = new OctreeNode(this.level+1, this, this.L/2,newCenter(pointQuadrant, this.center, this.L), pointQuadrant) ;
 				pointOcToAdd.p = point;
-				pointOcToAdd.barycenter = point;
+				pointOcToAdd.barycenter = new Point_3(point.x, point.y, point.z);
 				pointOcToAdd.quadrant = pointQuadrant;
 				this.children.add(pointOcToAdd);
 			}
