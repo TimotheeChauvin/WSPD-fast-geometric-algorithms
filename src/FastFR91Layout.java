@@ -82,47 +82,11 @@ public class FastFR91Layout extends Layout {
 		countRepulsive++;
 		return (k*k)/distance;
 	}
-	
-	/**
-	 * Compute the displacement of vertex 'u', due to the attractive forces of its neighbors
-	 * 
-	 * @param u  the vertex to which attractive forces are applied
-	 * @return 'disp' a 3d vector storing the displacement of vertex 'u'
-	 */	
-	private Vector_3 computeAttractiveForce(Node u) {
-		Vector_3 attractive_force = new Vector_3(0,0,0);
-		
-		for(Node temp : u.neighbors)
-		{
-			double distance = u.p.distanceFrom(temp.p).doubleValue();
-			double aF = attractiveForce(distance);
-			attractive_force.x += (temp.p.x - u.p.x) / distance * aF;
-			attractive_force.y += (temp.p.y - u.p.y) / distance * aF; 
-			attractive_force.z += (temp.p.z - u.p.z) / distance * aF;
-		}
-		return attractive_force;		
-	}
-
-	/**
-	 * Compute, for each vertex, the displacement due to attractive forces (between neighboring nodes)
-	 * 
-	 * @return a vector v[]: v[i] stores the geometric displacement of the i-th node
-	 */	
-	private Vector_3[] computeAllAttractiveForces() {
-		Vector_3[] teta = new Vector_3[g.sizeVertices()];
-		int i=0;
-		for (Node v : g.vertices){
-			teta[i]=computeAttractiveForce(v);
-			i++;
-		}
-		return teta;
-	}
-
 
 
 	private Vector_3[] computeAllRepulsiveForces() {
 		// TODO
-		ArrayList<Point_3> pointsList;
+		ArrayList<Point_3> pointsList = new ArrayList<Point_3>();
 		for (Node n: this.g.vertices) {
 			// Node contains a "p" (point) field
 			pointsList.add(n.p);
@@ -132,30 +96,28 @@ public class FastFR91Layout extends Layout {
 		for (OctreeNode[] pair: wspd) {
 			OctreeNode n1 = pair[0];
 			OctreeNode n2 = pair[1];
-			double distance = Math.sqrt(Math.pow(n1.barycenter.x - n2.barycenter.x, 2) + Math.pow(n1.barycenter.y - n2.barycenter.y, 2) + Math.pow(n1.barycenter.z - n2.barycenter.z, 2));
-			n1.repForce.x = n2.numberPoints * this.repulsiveForce(distance).x ;
-			n1.repForce.y = n2.numberPoints * this.repulsiveForce(distance).y ;
-			n1.repForce.z = n2.numberPoints * this.repulsiveForce(distance).z ;
-
-			n2.repForce.x = n1.numberPoints * this.repulsiveForce(distance).x ;
-			n2.repForce.y = n1.numberPoints * this.repulsiveForce(distance).y ;
-			n2.repForce.z = n1.numberPoints * this.repulsiveForce(distance).z ;
-
+			double distance = Math.sqrt(
+				Math.pow(n1.barycenter.x - n2.barycenter.x, 2) + 
+				Math.pow(n1.barycenter.y - n2.barycenter.y, 2) + 
+				Math.pow(n1.barycenter.z - n2.barycenter.z, 2));
+			
+			// direction: Vector_3 from n1 to n2
+			Vector_3 direction = new Vector_3(n1.barycenter, n2.barycenter).multiplyByScalar(distance);
+			n1.repForce = n1.repForce.sum(direction.multiplyByScalar(- n2.numberPoints * this.repulsiveForce(distance)));
+			n2.repForce = n2.repForce.sum(direction.multiplyByScalar(n1.numberPoints * this.repulsiveForce(distance)));
 			//this.repulsiveForce(distance).multiplyByScalar(n1.numberPoints);
-
-
 		}
-		recTraversal(oc.root);
+		this.recTraversal(oc.root);
 		Vector_3[] repForces = new Vector_3[g.sizeVertices()];
 		int count = 0;
 		for (Node vertex : g.vertices) {
-			repForces[count] = hm.get(vertex.p); // use hash map to obtain repforce
+			repForces[count] = this.hm.get(vertex.p); // use hash map to obtain repforce
 			count += 1;
 		}
 		return repForces;
 	}
 
-	public static void recTraversal(OctreeNode n) {
+	public void recTraversal(OctreeNode n) {
 		if (!n.children.isEmpty()) {
 			for (OctreeNode child : n.children) {
 				child.repForce = child.repForce.sum(n.repForce); // add force to the child
@@ -163,7 +125,7 @@ public class FastFR91Layout extends Layout {
 			}
 		}
 		else { // leaf
-			hm.put(n.p, n.repForce);
+			this.hm.put(n.p, n.repForce);
 		}
 	}
 
@@ -204,6 +166,42 @@ public class FastFR91Layout extends Layout {
 		
 		this.iterationCount++; // increase counter (to count the number of performed iterations)
 	}
+
+	/**
+	 * Compute the displacement of vertex 'u', due to the attractive forces of its neighbors
+	 * 
+	 * @param u  the vertex to which attractive forces are applied
+	 * @return 'disp' a 3d vector storing the displacement of vertex 'u'
+	 */	
+	private Vector_3 computeAttractiveForce(Node v) {
+		Vector_3 delta;
+		double norm;
+		Vector_3 disp = new Vector_3(0,0,0);
+		for (Node u : g.getNeighbors(v)){
+			delta= new Vector_3(v.p, u.p);  // compute delta=u-v
+			norm=Math.sqrt((double) delta.squaredLength());  //compute norm of delta
+			if (norm!=0){
+				disp=disp.sum(delta.multiplyByScalar(attractiveForce(norm)/norm));  //compute displacement of v due to u
+			}
+		}
+		return disp;
+	}
+
+	/**
+	 * Compute, for each vertex, the displacement due to attractive forces (between neighboring nodes)
+	 * 
+	 * @return a vector v[]: v[i] stores the geometric displacement of the i-th node
+	 */	
+	private Vector_3[] computeAllAttractiveForces() {
+		Vector_3[] teta = new Vector_3[g.sizeVertices()];
+		int i=0;
+		for (Node v : g.vertices){
+			teta[i]=computeAttractiveForce(v);
+			i++;
+		}
+		return teta;
+	}
+
 	
 	/**
 	 * Cooling system: the temperature decreases linearly at each iteration

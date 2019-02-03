@@ -36,6 +36,7 @@ public class OctreeNode {
 		this.father = null;
 		this.p = null;
 		this.barycenter = null;
+		this.repForce = new Vector_3(0, 0, 0);
 		this.numberPoints = 0;
 		for (Point_3 p : points) {
 			this.add(p);
@@ -56,6 +57,7 @@ public class OctreeNode {
 		this.father = father;
 		this.center = center;
 		this.barycenter = null;
+		this.repForce = new Vector_3(0, 0, 0);
 		this.numberPoints = 1;
 	}
 
@@ -277,8 +279,12 @@ public class OctreeNode {
 			System.out.print(this.p);
 		}
 		else { // recursion
-			System.out.println("Node[L=" + this.L + "]" + "[center=" + this.center + "]"
-					+ "[rep=" + this.p + "]"  + "[barycenter=" + this.barycenter + "]"  + "(");
+			System.out.println("Node[L=" + this.L + "]" +
+					"[center=" + this.center + "]" +
+					"[rep=" + this.p + "]"  +
+					"[barycenter=" + this.barycenter + "]" +
+					"[npoints=" + this.numberPoints + "]" +
+					"(");
 			for (OctreeNode child:this.children) {
 				child.printThis();
 				System.out.println(", ");
