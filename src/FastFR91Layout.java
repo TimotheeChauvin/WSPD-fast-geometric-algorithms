@@ -5,6 +5,7 @@ import Jcg.geometry.Vector_3;
 import jdg.graph.AdjacencyListGraph;
 import jdg.graph.Node;
 import jdg.layout.Layout;
+import java.util.*;
 
 /**
  * A class implementing the Fruchterman and Reingold method with fast approximation of repulsive forces
@@ -28,7 +29,7 @@ public class FastFR91Layout extends Layout {
 	private int countRepulsive=0; // count the number of computed repulsive forces (to measure time performances)
 	
 	private double accumulated_time = 0;
-	
+	private HashMap<Point_3, Vector_3> hm;
 	/**
 	 * Initialize the parameters of the force-directed layout
 	 * 
@@ -56,6 +57,7 @@ public class FastFR91Layout extends Layout {
 		this.minTemperature=0.05;
 		this.coolingConstant=0.98;
 		this.s = 1; // TODO decide which value to use
+		this.hm = new HashMap<Point_3, Vector_3>(N, (float) 1.);
 		
 		System.out.println("done ("+N+" nodes)");
 		//System.out.println("k="+k+" - temperature="+temperature);
@@ -125,13 +127,43 @@ public class FastFR91Layout extends Layout {
 			// Node contains a "p" (point) field
 			pointsList.add(n.p);
 		}
-
 		Octree oc = new Octree(pointsList);
 		List<OctreeNode[]> wspd = WSPD.buildWSPD(oc, this.s);
 		for (OctreeNode[] pair: wspd) {
 			OctreeNode n1 = pair[0];
 			OctreeNode n2 = pair[1];
-			
+			double distance = Math.sqrt(Math.pow(n1.barycenter.x - n2.barycenter.x, 2) + Math.pow(n1.barycenter.y - n2.barycenter.y, 2) + Math.pow(n1.barycenter.z - n2.barycenter.z, 2));
+			n1.repForce.x = n2.numberPoints * this.repulsiveForce(distance).x ;
+			n1.repForce.y = n2.numberPoints * this.repulsiveForce(distance).y ;
+			n1.repForce.z = n2.numberPoints * this.repulsiveForce(distance).z ;
+
+			n2.repForce.x = n1.numberPoints * this.repulsiveForce(distance).x ;
+			n2.repForce.y = n1.numberPoints * this.repulsiveForce(distance).y ;
+			n2.repForce.z = n1.numberPoints * this.repulsiveForce(distance).z ;
+
+			//this.repulsiveForce(distance).multiplyByScalar(n1.numberPoints);
+
+
+		}
+		recTraversal(oc.root);
+		Vector_3[] repForces = new Vector_3[g.sizeVertices()];
+		int count = 0;
+		for (Node vertex : g.vertices) {
+			repForces[count] = hm.get(vertex.p); // use hash map to obtain repforce
+			count += 1;
+		}
+		return repForces;
+	}
+
+	public static void recTraversal(OctreeNode n) {
+		if (!n.children.isEmpty()) {
+			for (OctreeNode child : n.children) {
+				child.repForce = child.repForce.sum(n.repForce); // add force to the child
+				recTraversal(child);
+			}
+		}
+		else { // leaf
+			hm.put(n.p, n.repForce);
 		}
 	}
 

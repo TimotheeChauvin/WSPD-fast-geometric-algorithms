@@ -1,5 +1,6 @@
 import java.util.*;
 import Jcg.geometry.Point_3;
+import Jcg.geometry.Vector_3;
 
 /**
  * A class for representing a node of an Octree
@@ -9,15 +10,17 @@ import Jcg.geometry.Point_3;
  */
 
 public class OctreeNode {
-	public double L;
-	public int level;
-	public int quadrant;
-	public List<OctreeNode> children;
+	public int numberPoints; // number of points within the subcube associated with the OctreeNode
 	public OctreeNode father;
-	public Point_3 p; // point stored in a leaf
+	public int quadrant;
+	public int level;
+	public Point_3 p; // representative
 	public Point_3 center;
 	public Point_3 barycenter;
-	public int numberPoints;
+	public double L;
+	public List<OctreeNode> children;
+	public Vector_3 repForce; // used only in FastFR91 
+
 
 	/**
 	 * Create the octree for storing an input point cloud
