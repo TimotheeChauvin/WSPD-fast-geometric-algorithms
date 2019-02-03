@@ -27,6 +27,8 @@ public class FastClosestPair_3 implements ClosestPair_3 {
 		startTime = System.currentTimeMillis();
 		List<OctreeNode[]> wspd = WSPD.buildWSPD(oc, 1.001);
 		System.out.println("WSPD (ms): " + (System.currentTimeMillis() - startTime));
+		System.out.print("Number of pairs in WSPD: " + wspd.size() + "; ");
+		System.out.println("pairs/n^2 = " + (double) wspd.size()/(points.length*points.length));
 
 		startTime = System.currentTimeMillis();
 

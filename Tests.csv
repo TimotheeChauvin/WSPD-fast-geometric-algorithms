@@ -53,9 +53,16 @@ Horse,Octree,2188,2025,86,58,,
 ,,,,,,,
 From now on: corrected program with diameter = diagonal,,,,,,,
 ,,,,,,,
-Test of our results,Slow Closest,Fast Closest,Slow Closest = Fast Closest?,Slow Diameter,Fast Diameter (epsilon = 0.7),Fast Diameter/Slow Diameter,Respects epsilon specification?
+Obtained distances,Slow Closest,Fast Closest,Slow Closest = Fast Closest?,Slow Diameter,Fast Diameter (epsilon = 0.7),Fast Diameter/Slow Diameter,Respects epsilon specification?
 Torus_33,0.7200490825,0.7200490825,Yes,3.9764167103,3.8670241017,0.9724896517,Yes
 Nefertiti,0.0843654928,0.0843654928,Yes,5.0581924241,4.6144916029,0.9122807549,Yes
 Bague,0.0158165302,0.0158165302,Yes,4.3515030006,4.1836745934,0.9614320829,Yes
 Triceratops,0.0205384931,0.0205384931,Yes,17.8013969427,13.9247219144,0.7822263589,Yes
 Horse,0.00087,0.00087,Yes,0.2299658708,0.2055723742,0.8939255793,Yes
+,,,,,,,
+Number of pairs in obtained WSPDs,"number of points, n",Fast Closest,Fast Closest/n²,Fast Diameter (epsilon = 0.7),Fast Diameter/n²,,
+Torus_33,33,809,0.7428833792,1056,0.9696969697,,
+Nefertiti,299,20027,0.2240131542,55689,0.6229124954,,
+Bague,2652,259534,0.036901772,1123129,0.1596917947,,
+Triceratops,2832,258300,0.032206083,978638,0.1220212802,,
+Horse,20000,2244904,0.00561226,10987479,0.0274686975,,
