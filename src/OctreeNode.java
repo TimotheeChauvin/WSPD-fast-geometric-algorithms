@@ -16,6 +16,8 @@ public class OctreeNode {
 	public OctreeNode father;
 	public Point_3 p; // point stored in a leaf
 	public Point_3 center;
+	public Point_3 barycenter;
+	public int numberPoints;
 
 	/**
 	 * Create the octree for storing an input point cloud
@@ -30,6 +32,8 @@ public class OctreeNode {
 		this.children = new LinkedList<OctreeNode>();
 		this.father = null;
 		this.p = null;
+		this.barycenter = null;
+		this.numberPoints = 0;
 		for (Point_3 p : points) {
 			this.add(p);
 		}
@@ -48,6 +52,8 @@ public class OctreeNode {
 		this.quadrant = quadrant;
 		this.father = father;
 		this.center = center;
+		this.barycenter = null;
+		this.numberPoints = 0;
 	}
 
 	/**
@@ -62,6 +68,8 @@ public class OctreeNode {
 		if (this.p == null) {
 			// There isn't any point yet, this is the first point added
 			this.p = point;
+			this.barycenter = point;
+			this.numberPoints = 1;
 			return;
 		}
 
@@ -71,13 +79,17 @@ public class OctreeNode {
 			// We'll have to add a new child with our current point whatever happens
 			OctreeNode pOcToAdd = new OctreeNode(this.level+1, this, this.L/2,newCenter(pQuadrant, this.center, this.L), pQuadrant);
 			pOcToAdd.p = this.p;
+			pOcToAdd.barycenter = new Point_3(this.p.x, this.p.y, this.p.z);
 			pOcToAdd.quadrant = pQuadrant;
 			this.children.add(pOcToAdd);
+			
+
 			
 			if (pQuadrant != pointQuadrant) { // points are in different quadrants
 				OctreeNode pointOcToAdd = new OctreeNode(this.level+1, this, this.L/2,newCenter(pointQuadrant, this.center, this.L), pointQuadrant) ;
 				pointOcToAdd.p = point;
 				pointOcToAdd.quadrant = pointQuadrant;
+				pointOcToAdd.barycenter = point;
 				this.children.add(pointOcToAdd);
 			}
 
@@ -99,10 +111,15 @@ public class OctreeNode {
 				// The quadrant of our point is free
 				OctreeNode pointOcToAdd = new OctreeNode(this.level+1, this, this.L/2,newCenter(pointQuadrant, this.center, this.L), pointQuadrant) ;
 				pointOcToAdd.p = point;
+				pointOcToAdd.barycenter = point;
 				pointOcToAdd.quadrant = pointQuadrant;
 				this.children.add(pointOcToAdd);
 			}
 		}
+		this.numberPoints += 1;
+		this.barycenter.x = 1./this.numberPoints*(point.x + (this.numberPoints - 1.)*this.barycenter.x); 
+		this.barycenter.y = 1./this.numberPoints*(point.y + (this.numberPoints - 1.)*this.barycenter.y);
+		this.barycenter.z = 1./this.numberPoints*(point.z + (this.numberPoints - 1.)*this.barycenter.z);
 	}
 	
 
@@ -258,7 +275,7 @@ public class OctreeNode {
 		}
 		else { // recursion
 			System.out.println("Node[L=" + this.L + "]" + "[center=" + this.center + "]"
-					+ "[rep=" + this.p + "]" + "(");
+					+ "[rep=" + this.p + "]"  + "[barycenter=" + this.barycenter + "]"  + "(");
 			for (OctreeNode child:this.children) {
 				child.printThis();
 				System.out.println(", ");
