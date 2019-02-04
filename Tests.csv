@@ -1,68 +1,90 @@
-"Octree with 8 children per node, sets",,,,,,,
-,,Slow Closest,Slow Diameter, Fast Closest, Fast Diameter (epsilon = 0.7),,
- Torus_33,Octree,0,0,1,0,,
-33,WSPD,,,6,4,,
-,Task,,,1,0,,
-Nefertiti,Octree,11,11,4,1,,
-299,WSPD,,,35,100,,
-,Task,,,9,26,,
-Bague,Octree,64,47,17,5,,
-2652,WSPD,,,272,1730,,
-,Task,,,84,121,,
-Triceratops,Octree,76,62,12,8,,
-2832,WSPD,,,234,1735,,
-,Task,,,79,116,,
-Horse,Octree,2258,2071,48,21,,
-20000,WSPD,,,2091,18611,,
-,Task,,,237,987,,
-,,,,,,,
-,,,,,,,
-"Octree with < 8 children per node (linkedlists), sets",,Slow Closest,Slow Diameter, Fast Closest, Fast Diameter (epsilon = 0.7),,
- Torus_33,Octree,0,0,1,1,,
-33,WSPD,,,11,12,,
-,Task,,,1,1,,
-Nefertiti,Octree,11,11,5,2,,
-299,WSPD,,,41,92,,
-,Task,,,9,25,,
-Bague,Octree,74,46,15,8,,
-2652,WSPD,,,343,1895,,
-,Task,,,94,121,,
-Triceratops,Octree,79,68,15,12,,
-2832,WSPD,,,321,1429,,
-,Task,,,89,110,,
-Horse,Octree,2025,1666,84,37,,
-20000,WSPD,,,2673,16781,,
-,Task,,,234,843,,
-,,,,,,,
-"Octree with < 8 children per node (linkedlists), lists",,Slow Closest,Slow Diameter, Fast Closest, Fast Diameter (epsilon = 0.7),,
- Torus_33,Octree,0,0,2,0,,
-33,WSPD,,,4,2,,
-,Task,,,1,0,,
-Nefertiti,Octree,12,10,7,2,,
-299,WSPD,,,20,6,,
-,Task,,,9,14,,
-Bague,Octree,62,44,19,12,,
-2652,WSPD,,,164,343,,
-,Task,,,54,48,,
-Triceratops,Octree,77,68,20,16,,
-2832,WSPD,,,143,185,,
-,Task,,,58,83,,
-Horse,Octree,2188,2025,86,58,,
-20000,WSPD,,,677,2507,,
-,Task,,,82,107,,
-,,,,,,,
-From now on: corrected program with diameter = diagonal,,,,,,,
-,,,,,,,
-Obtained distances,Slow Closest,Fast Closest,Slow Closest = Fast Closest?,Slow Diameter,Fast Diameter (epsilon = 0.7),Fast Diameter/Slow Diameter,Respects epsilon specification?
-Torus_33,0.7200490825,0.7200490825,Yes,3.9764167103,3.8670241017,0.9724896517,Yes
-Nefertiti,0.0843654928,0.0843654928,Yes,5.0581924241,4.6144916029,0.9122807549,Yes
-Bague,0.0158165302,0.0158165302,Yes,4.3515030006,4.1836745934,0.9614320829,Yes
-Triceratops,0.0205384931,0.0205384931,Yes,17.8013969427,13.9247219144,0.7822263589,Yes
-Horse,0.00087,0.00087,Yes,0.2299658708,0.2055723742,0.8939255793,Yes
-,,,,,,,
-Number of pairs in obtained WSPDs,"number of points, n",Fast Closest,Fast Closest/n²,Fast Diameter (epsilon = 0.7),Fast Diameter/n²,,
-Torus_33,33,809,0.7428833792,1056,0.9696969697,,
-Nefertiti,299,20027,0.2240131542,55689,0.6229124954,,
-Bague,2652,259534,0.036901772,1123129,0.1596917947,,
-Triceratops,2832,258300,0.032206083,978638,0.1220212802,,
-Horse,20000,2244904,0.00561226,10987479,0.0274686975,,
+Octree with 8 children per node, sets;;;;;;;
+;;Slow Closest;Slow Diameter; Fast Closest;Fast Diameter (epsilon = 0.7);;
+Torus_33;Octree;0;0;1;0;;
+33;WSPD;;;6;4;;
+;Task;;;1;0;;
+Nefertiti;Octree;11;11;4;1;;
+299;WSPD;;;35;100;;
+;Task;;;9;26;;
+Bague;Octree;64;47;17;5;;
+2652;WSPD;;;272;1730;;
+;Task;;;84;121;;
+Triceratops;Octree;76;62;12;8;;
+2832;WSPD;;;234;1735;;
+;Task;;;79;116;;
+Horse;Octree;2258;2071;48;21;;
+20000;WSPD;;;2091;18611;;
+;Task;;;237;987;;
+;;;;;;;
+;;;;;;;
+Octree with < 8 children per node (linkedlists), sets;;Slow Closest;Slow Diameter; Fast Closest;Fast Diameter (epsilon = 0.7);;
+Torus_33;Octree;0;0;1;1;;
+33;WSPD;;;11;12;;
+;Task;;;1;1;;
+Nefertiti;Octree;11;11;5;2;;
+299;WSPD;;;41;92;;
+;Task;;;9;25;;
+Bague;Octree;74;46;15;8;;
+2652;WSPD;;;343;1895;;
+;Task;;;94;121;;
+Triceratops;Octree;79;68;15;12;;
+2832;WSPD;;;321;1429;;
+;Task;;;89;110;;
+Horse;Octree;2025;1666;84;37;;
+20000;WSPD;;;2673;16781;;
+;Task;;;234;843;;
+;;;;;;;
+Octree with < 8 children per node (linkedlists), lists;;Slow Closest;Slow Diameter; Fast Closest;Fast Diameter (epsilon = 0.7);;
+Torus_33;Octree;0;0;2;0;;
+33;WSPD;;;4;2;;
+;Task;;;1;0;;
+Nefertiti;Octree;12;10;7;2;;
+299;WSPD;;;20;6;;
+;Task;;;9;14;;
+Bague;Octree;62;44;19;12;;
+2652;WSPD;;;164;343;;
+;Task;;;54;48;;
+Triceratops;Octree;77;68;20;16;;
+2832;WSPD;;;143;185;;
+;Task;;;58;83;;
+Horse;Octree;2188;2025;86;58;;
+20000;WSPD;;;677;2507;;
+;Task;;;82;107;;
+;;;;;;;
+From now on: corrected program with diameter = diagonal;;;;;;;
+;;;;;;;
+Obtained distances;Slow Closest;Fast Closest;Slow Closest = Fast Closest?;Slow Diameter;Fast Diameter (epsilon = 0.7);Fast Diameter/Slow Diameter;Respects epsilon specification?
+Torus_33;0.7200490825;0.7200490825;Yes;3.9764167103;3.8670241017;0.9724896517;Yes
+Nefertiti;0.0843654928;0.0843654928;Yes;5.0581924241;4.6144916029;0.9122807549;Yes
+Bague;0.0158165302;0.0158165302;Yes;4.3515030006;4.1836745934;0.9614320829;Yes
+Triceratops;0.0205384931;0.0205384931;Yes;17.8013969427;13.9247219144;0.7822263589;Yes
+Horse;0.00087;0.00087;Yes;0.2299658708;0.2055723742;0.8939255793;Yes
+;;;;;;;
+Number of pairs in obtained WSPDs;number of points, n;Fast Closest;Fast Closest/n²;Fast Diameter (epsilon = 0.7);Fast Diameter/n²;;
+Torus_33;33;809;0.7428833792;1056;0.9696969697;;
+Nefertiti;299;20027;0.2240131542;55689;0.6229124954;;
+Bague;2652;259534;0.036901772;1123129;0.1596917947;;
+Triceratops;2832;258300;0.032206083;978638;0.1220212802;;
+Horse;20000;2244904;0.00561226;10987479;0.0274686975;;
+;;;;;;;
+;;;;;;;
+Networks by size;Number of vertices;Number of edges;Accumulated time after 15 iterations: Slow FR91 (s);Accumulated time after 15 iterations: Fast FR91 (s);;;
+siggraph_2005;33;40;0.120183514;0.12124954500000004;;;
+karate;34;78;0.041502098;0.170452836;;;
+ash85;85;219;0.186747243;0.327119858;;;
+santa_fe;118;200;0.26686502;0.47107532899999993;;;
+west0497;497;1715;0.765008249;0.6343987509999998;;;
+dwt_592;592;2256;0.910370844;0.7777566409999999;;;
+qh882;882;1533;2.220177703;1.3552644550000001;;;
+facebook;1128;1547;3.6095467169999993;1.4722866709999995;;;
+jagmesh7;1138;3156;2.7445698420000006;1.3164444960000001;;;
+3elt;4720;13722;24.355798419;2.835436843;;;
+power_grid_4k;4941;6594;27.578238773;3.1689244869999995;;;
+fe_4elt2;11143;32818;168.822970602;6.121770886;;;
+barth5;15606;45878;436.701930505;10.346227347000001;;;
+bcsstk31;35588;572914;1788.4635401280004;40.889549222;;;
+;;;;;;;
+;;;;;;;
+;;;;;;;
+;;;;;;;
+;;;;;;;
