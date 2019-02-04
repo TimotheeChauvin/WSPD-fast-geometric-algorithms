@@ -16,6 +16,27 @@ git fetch origin
 git reset --hard origin/master
 ```
 
+Network files by size:
+```
+6,6M    ./bcsstk31.mtx
+636K    ./barth5.mtx
+336K    ./fe_4elt2.mtx
+128K    ./3elt.mtx
+64K     ./power_grid_4k.mtx
+52K     ./qh882.mtx
+44K     ./facebook_coord.mtx
+36K     ./jagmesh7.mtx
+24K     ./dwt_592.mtx
+16K     ./west0497.mtx
+12K     ./facebook.mtx
+4,0K    ./test.mtx
+4,0K    ./siggraph_2005.mtx
+4,0K    ./siggraph_2005_coord.mtx
+4,0K    ./santa_fe.mtx
+4,0K    ./karate.mtx
+4,0K    ./ash85.mtx
+```
+
 Timothee ```tasks.json```:
 
 ```

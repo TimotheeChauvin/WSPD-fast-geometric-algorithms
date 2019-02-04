@@ -68,7 +68,7 @@ public class OctreeNode {
 	 */
 
 	public void add(Point_3 point) {
-		int pointQuadrant = quadrant(point, this.center, this.L);
+		int pointQuadrant = quadrant(point, this.center);
 
 		if (this.p == null) {
 			// There isn't any point yet, this is the first point added
@@ -79,7 +79,7 @@ public class OctreeNode {
 		}
 
 		if (this.children.isEmpty()) { // Lonely point without children
-			int pQuadrant = quadrant(this.p, this.center, this.L);
+			int pQuadrant = quadrant(this.p, this.center);
 
 			// We'll have to add a new child with our current point whatever happens
 			OctreeNode pOcToAdd = new OctreeNode(this.level+1, this, this.L/2,newCenter(pQuadrant, this.center, this.L), pQuadrant);
@@ -156,7 +156,7 @@ public class OctreeNode {
 	 * @return an int between 0 and 7 representing the quadrant
 	 */
 
-	public static int quadrant(Point_3 point, Point_3 center, double L) {
+	public static int quadrant(Point_3 point, Point_3 center) {
 		if (point.x <= center.x && point.y <= center.y && point.z <= center.z) {
 			return 0; // 000
 		}

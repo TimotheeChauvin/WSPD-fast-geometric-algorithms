@@ -24,6 +24,7 @@ public class FR91Layout extends Layout {
 	public int iterationCount=0; // count the number of performed iterations
 	private int countRepulsive=0; // count the number of computed repulsive forces (to measure time performances)
 	
+	private double accumulated_time = 0;
 	/**
 	 * Initialize the parameters of the force-directed layout
 	 * 
@@ -92,9 +93,9 @@ public class FR91Layout extends Layout {
 		Vector_3[] tetaAttractive = computeAllAttractiveForces(); // compute the displacements due to attractive forces (for each vertex)
 		System.out.println("AttractiveForces time (ms): " + (System.currentTimeMillis() - partialStartTime));
 
-		Vector_3 teta;  
+ 		Vector_3 teta;  
 		double norm;
-		int i =0;
+		int i = 0;
 		
 		// second step: compute the total displacements and move all nodes to their new locations
 		for (Node u:g.vertices){
@@ -109,8 +110,9 @@ public class FR91Layout extends Layout {
 		
 		// evaluate time performances
     	endTime=System.nanoTime();
-        double duration=(double)(endTime-startTime)/1000000000.;
-        System.out.println("iteration "+this.iterationCount+" done ("+duration+" seconds)");
+		double duration=(double)(endTime-startTime)/1000000000.;
+		accumulated_time += duration;
+        System.out.println("iteration "+this.iterationCount+" done ("+duration+" seconds, accumulated time=" + accumulated_time + ")");
 		this.iterationCount++; // increase counter (to count the number of performed iterations)
 	}
 	
