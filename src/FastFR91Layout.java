@@ -57,7 +57,6 @@ public class FastFR91Layout extends Layout {
 		this.minTemperature=0.1;
 		this.coolingConstant=0.97;
 		this.s = 1; // TODO decide which value to use
-		this.hm = new HashMap<Point_3, Vector_3>(N, (float) 1.);
 		
 		System.out.println("done ("+N+" nodes)");
 		//System.out.println("k="+k+" - temperature="+temperature);
@@ -85,6 +84,7 @@ public class FastFR91Layout extends Layout {
 
 
 	private Vector_3[] computeAllRepulsiveForces() {
+		this.hm = new HashMap<Point_3, Vector_3>(g.vertices.size(), (float) 1.);
 		ArrayList<Point_3> pointsList = new ArrayList<Point_3>();
 		for (Node n: this.g.vertices) {
 			// Node contains a "p" (point) field
@@ -97,6 +97,7 @@ public class FastFR91Layout extends Layout {
 		startTime = System.currentTimeMillis();
 		List<OctreeNode[]> wspd = WSPD.buildWSPD(oc, this.s);
 		System.out.println("WSPD build time (ms): " + (System.currentTimeMillis() - startTime));
+		System.out.println("WSPD size: " + wspd.size());
 
 		startTime = System.currentTimeMillis();
 		for (OctreeNode[] pair: wspd) {
@@ -113,14 +114,19 @@ public class FastFR91Layout extends Layout {
 			n2.repForce = n2.repForce.sum(direction.multiplyByScalar(n1.numberPoints * this.repulsiveForce(distance)));
 			//this.repulsiveForce(distance).multiplyByScalar(n1.numberPoints);
 		}
+		System.out.println("Loop over WSPD pairs time (ms): " + (System.currentTimeMillis() - startTime));
+		startTime = System.currentTimeMillis();
 		this.recTraversal(oc.root);
+		System.out.println("recTraversal time (ms): " + (System.currentTimeMillis() - startTime));
+		
+		startTime = System.currentTimeMillis();
 		Vector_3[] repForces = new Vector_3[g.sizeVertices()];
 		int count = 0;
 		for (Node vertex : g.vertices) {
 			repForces[count] = this.hm.get(vertex.p); // use hash map to obtain repforce
 			count += 1;
 		}
-		System.out.println("RepForce computation time (ms): " + (System.currentTimeMillis() - startTime));
+		System.out.println("fill repForces array time (ms): " + (System.currentTimeMillis() - startTime));
 		return repForces;
 	}
 
