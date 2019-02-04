@@ -80,13 +80,18 @@ public class FR91Layout extends Layout {
 	 * Positions of vertices are updated according to their mutual attractive and repulsive forces.
 	 */	
 	public void computeLayout() {
-		System.out.print("Performing iteration (FR91): "+this.iterationCount);
+		System.out.println("Performing iteration (FR91): "+this.iterationCount);
 		long startTime=System.nanoTime(), endTime; // for evaluating time performances
 		
 		// first step: for each vertex compute the displacements due to attractive and repulsive forces
-		
+		long partialStartTime = System.currentTimeMillis();
 		Vector_3[] tetaRepulsive = computeAllRepulsiveForces();  // compute the displacements due to repulsive forces (for each vertex)
+		System.out.println("RepulsiveForces time (ms): " + (System.currentTimeMillis() - partialStartTime));
+
+		partialStartTime = System.currentTimeMillis();
 		Vector_3[] tetaAttractive = computeAllAttractiveForces(); // compute the displacements due to attractive forces (for each vertex)
+		System.out.println("AttractiveForces time (ms): " + (System.currentTimeMillis() - partialStartTime));
+
 		Vector_3 teta;  
 		double norm;
 		int i =0;

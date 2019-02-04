@@ -85,14 +85,20 @@ public class FastFR91Layout extends Layout {
 
 
 	private Vector_3[] computeAllRepulsiveForces() {
-		// TODO
 		ArrayList<Point_3> pointsList = new ArrayList<Point_3>();
 		for (Node n: this.g.vertices) {
 			// Node contains a "p" (point) field
 			pointsList.add(n.p);
 		}
+		long startTime = System.currentTimeMillis();
 		Octree oc = new Octree(pointsList);
+		System.out.println("Octree build time (ms): " + (System.currentTimeMillis() - startTime));
+
+		startTime = System.currentTimeMillis();
 		List<OctreeNode[]> wspd = WSPD.buildWSPD(oc, this.s);
+		System.out.println("WSPD build time (ms): " + (System.currentTimeMillis() - startTime));
+
+		startTime = System.currentTimeMillis();
 		for (OctreeNode[] pair: wspd) {
 			OctreeNode n1 = pair[0];
 			OctreeNode n2 = pair[1];
@@ -102,7 +108,7 @@ public class FastFR91Layout extends Layout {
 				Math.pow(n1.barycenter.z - n2.barycenter.z, 2));
 			
 			// direction: Vector_3 from n1 to n2
-			Vector_3 direction = new Vector_3(n1.barycenter, n2.barycenter).multiplyByScalar(distance);
+			Vector_3 direction = new Vector_3(n1.barycenter, n2.barycenter).multiplyByScalar(1/distance);
 			n1.repForce = n1.repForce.sum(direction.multiplyByScalar(- n2.numberPoints * this.repulsiveForce(distance)));
 			n2.repForce = n2.repForce.sum(direction.multiplyByScalar(n1.numberPoints * this.repulsiveForce(distance)));
 			//this.repulsiveForce(distance).multiplyByScalar(n1.numberPoints);
@@ -114,6 +120,7 @@ public class FastFR91Layout extends Layout {
 			repForces[count] = this.hm.get(vertex.p); // use hash map to obtain repforce
 			count += 1;
 		}
+		System.out.println("RepForce computation time (ms): " + (System.currentTimeMillis() - startTime));
 		return repForces;
 	}
 
@@ -137,11 +144,17 @@ public class FastFR91Layout extends Layout {
 	 * Repulsive forces are approximated using the WSPD decomposition
 	 */	
 	public void computeLayout() {
-		System.out.print("Performing iteration (fast FR91): "+this.iterationCount);
+		System.out.println("Performing iteration (fast FR91): "+this.iterationCount);
 		long startTime=System.nanoTime(), endTime; // for evaluating time performances
 		
+		long partialStartTime = System.currentTimeMillis();
 		Vector_3[] tetaRepulsive = computeAllRepulsiveForces();  // compute the displacements due to repulsive forces (for each vertex)
+		System.out.println("RepulsiveForces time (ms): " + (System.currentTimeMillis() - partialStartTime));
+
+		partialStartTime = System.currentTimeMillis();
 		Vector_3[] tetaAttractive = computeAllAttractiveForces(); // compute the displacements due to attractive forces (for each vertex)
+		System.out.println("AttractiveForces time (ms): " + (System.currentTimeMillis() - partialStartTime));
+
 		Vector_3 teta;  
 		double norm;
 		int i =0;
