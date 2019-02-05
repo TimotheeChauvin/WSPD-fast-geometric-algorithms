@@ -56,7 +56,7 @@ public class FastFR91Layout extends Layout {
 		this.temperature=w/2.; // the temperature is a fraction of the width of the drawing area
 		this.minTemperature=0.1;
 		this.coolingConstant=0.97;
-		this.s = 1; // TODO decide which value to use
+		this.s = 0.01; // TODO decide which value to use
 		
 		System.out.println("done ("+N+" nodes)");
 		//System.out.println("k="+k+" - temperature="+temperature);
