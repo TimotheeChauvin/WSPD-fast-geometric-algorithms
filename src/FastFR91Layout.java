@@ -1,5 +1,3 @@
-
-
 import Jcg.geometry.Point_3;
 import Jcg.geometry.Vector_3;
 import jdg.graph.AdjacencyListGraph;
@@ -22,14 +20,13 @@ public class FastFR91Layout extends Layout {
 	public double temperature; // initial temperature
 	public double minTemperature; // minimal temperature (strictly positive)
 	public double coolingConstant; // constant term: the temperature decreases linearly at each iteration
-	public boolean useCooling; // say whether performing simulated annealing
 	public double s; // well-separatedness parameter for our WSPD
 	
 	public int iterationCount=0; // count the number of performed iterations
-	private int countRepulsive=0; // count the number of computed repulsive forces (to measure time performances)
 	
 	private double accumulated_time = 0;
-	private HashMap<Point_3, Vector_3> hm;
+	private HashMap<Point_3, Vector_3> hm; // our mapping between points and their associated repulsive forces
+	
 	/**
 	 * Initialize the parameters of the force-directed layout
 	 * 
@@ -56,10 +53,9 @@ public class FastFR91Layout extends Layout {
 		this.temperature=w/2.; // the temperature is a fraction of the width of the drawing area
 		this.minTemperature=0.1;
 		this.coolingConstant=0.97;
-		this.s = 0.01; // TODO decide which value to use
+		this.s = 1; // We tried 3 values of s here: 0.01, 0.1 and 1
 		
 		System.out.println("done ("+N+" nodes)");
-		//System.out.println("k="+k+" - temperature="+temperature);
 		System.out.println(this.toString());
 	}
 	
@@ -78,16 +74,18 @@ public class FastFR91Layout extends Layout {
 	 * @param distance  distance between two nodes
 	 */	
 	public double repulsiveForce(double distance) {
-		countRepulsive++;
 		return (k*k)/distance;
 	}
 
-
+	/**
+	 * Compute an approximation of the repulsive forces exerted on each point, using a WSPD
+	 * @return an array of the repulsive forces exerted on each point
+	 */
 	private Vector_3[] computeAllRepulsiveForces() {
 		this.hm = new HashMap<Point_3, Vector_3>(g.vertices.size(), (float) 1.);
 		ArrayList<Point_3> pointsList = new ArrayList<Point_3>();
 		for (Node n: this.g.vertices) {
-			// Node contains a "p" (point) field
+			// Add the point corresponding to this node
 			pointsList.add(n.p);
 		}
 		long startTime = System.currentTimeMillis();
@@ -97,7 +95,7 @@ public class FastFR91Layout extends Layout {
 		startTime = System.currentTimeMillis();
 		List<OctreeNode[]> wspd = WSPD.buildWSPD(oc, this.s);
 		System.out.println("WSPD build time (ms): " + (System.currentTimeMillis() - startTime));
-		System.out.println("WSPD size: " + wspd.size());
+		System.out.println("Number of pairs in WSPD: " + wspd.size());
 
 		startTime = System.currentTimeMillis();
 		for (OctreeNode[] pair: wspd) {
@@ -107,29 +105,28 @@ public class FastFR91Layout extends Layout {
 				Math.pow(n1.barycenter.x - n2.barycenter.x, 2) + 
 				Math.pow(n1.barycenter.y - n2.barycenter.y, 2) + 
 				Math.pow(n1.barycenter.z - n2.barycenter.z, 2));
-			
-			// direction: Vector_3 from n1 to n2
+			// direction: normalized Vector_3 from n1 to n2
 			Vector_3 direction = new Vector_3(n1.barycenter, n2.barycenter).multiplyByScalar(1/distance);
 			n1.repForce = n1.repForce.sum(direction.multiplyByScalar(- n2.numberPoints * this.repulsiveForce(distance)));
 			n2.repForce = n2.repForce.sum(direction.multiplyByScalar(n1.numberPoints * this.repulsiveForce(distance)));
-			//this.repulsiveForce(distance).multiplyByScalar(n1.numberPoints);
 		}
 		System.out.println("Loop over WSPD pairs time (ms): " + (System.currentTimeMillis() - startTime));
-		startTime = System.currentTimeMillis();
 		this.recTraversal(oc.root);
-		System.out.println("recTraversal time (ms): " + (System.currentTimeMillis() - startTime));
 		
-		startTime = System.currentTimeMillis();
 		Vector_3[] repForces = new Vector_3[g.sizeVertices()];
 		int count = 0;
 		for (Node vertex : g.vertices) {
-			repForces[count] = this.hm.get(vertex.p); // use hash map to obtain repforce
+			repForces[count] = this.hm.get(vertex.p); // get the repulsive force for this point
 			count += 1;
 		}
-		System.out.println("fill repForces array time (ms): " + (System.currentTimeMillis() - startTime));
 		return repForces;
 	}
 
+	/**
+	 * Recursively traverse our WSPD top-down and for each point, add the repulsive force
+	 * exerted on the representative point of its father OctreeNode.
+	 * Store the resulting forces (for each leaf) in this.hm.
+	 */
 	public void recTraversal(OctreeNode n) {
 		if (!n.children.isEmpty()) {
 			for (OctreeNode child : n.children) {
@@ -223,7 +220,7 @@ public class FastFR91Layout extends Layout {
 
 	
 	/**
-	 * Cooling system: the temperature decreases linearly at each iteration
+	 * Cooling system: the temperature decreases exponentially at each iteration
 	 * 
 	 * Remark: the temperature is assumed to remain strictly positive (>=minTemperature)
 	 */	
