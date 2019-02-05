@@ -1,0 +1,27 @@
+Creating a point cloud (from OFF file): /home/utilisateur/Documents/polytechnique/2A/COURS_2A/2/INF421/PI/data/pointclouds/nefertiti.off
+        Reading coordinates...done 299 points
+Computing closest pair: slow computation...done
+slowClosest time (ms): 11
+slowClosest pair: (-0.206959,-0.37914,0.28152);(-0.27005,-0.325,0.29587)
+slowClosest distance: 0.08436549283326683
+
+Computing farthest pair: slow computation...done
+slowDiameter time (ms): 9
+slowDiameter pair: (-0.523504,-2.45282,-0.55391) ; (1.25707,2.26888,-0.90092)
+slowDiameter distance: 5.05819242413493
+
+Octree (ms): 6
+WSPD (ms): 30
+Number of pairs in WSPD: 20027;
+FastClosestPair computation (ms): 7
+fastClosest time (ms): 44
+fastClosest pair: (-0.206959,-0.37914,0.28152) ; (-0.27005,-0.325,0.29587)
+fastClosest distance: 0.08436549283326683
+
+Octree (ms): 2
+WSPD (ms): 21
+Number of pairs in WSPD: 55689;
+FastDiameter computation (ms): 9
+fastDiameter time (ms): 32
+fastDiameter pair: (0.668993,-1.91667,-0.16512) ; (-1.64909,1.88614,-1.37287)
+fastDiameter distance: 4.614491602927564
