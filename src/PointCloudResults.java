@@ -17,7 +17,6 @@ public class PointCloudResults {
 		System.out.println(filename);
 		File file = new File(filename);
 		Scanner sc = new Scanner(file);
-		String line;
 		sc.nextLine();  // ignore first line: "OFF"
 		int nPoints = sc.nextInt();
 		Point_3[] pointArray = new Point_3[nPoints];

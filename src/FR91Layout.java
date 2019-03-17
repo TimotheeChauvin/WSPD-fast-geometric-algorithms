@@ -3,7 +3,6 @@ import jdg.graph.AdjacencyListGraph;
 import jdg.graph.Node;
 import jdg.layout.Layout;
 import Jcg.geometry.PointCloud_3;
-import Jcg.geometry.Point_3;
 import Jcg.geometry.Vector_3;
 
 /**
