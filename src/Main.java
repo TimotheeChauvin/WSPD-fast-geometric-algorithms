@@ -21,12 +21,12 @@ public class Main {
         List<OctreeNode[]> wspd = WSPD.buildWSPD(oc, 0.5);
         System.out.println();
         WSPD.printWSPD(wspd);
-        FastClosestPair_3 fcpInstance = new FastClosestPair_3();
+        FastClosestPair fcpInstance = new FastClosestPair();
         Point_3[] minPointsPair = fcpInstance.findClosestPair(pointsArr);
         System.out.println(minPointsPair[0]);
         System.out.println(minPointsPair[1]);
 
-        FastDiameter_3 fdInstance = new FastDiameter_3(0.9999);
+        FastDiameter fdInstance = new FastDiameter(0.9999);
         Point_3[] diamPointPair = fdInstance.findFarthestPair(pointsArr);
         System.out.println(diamPointPair[0]);
         System.out.println(diamPointPair[1]);

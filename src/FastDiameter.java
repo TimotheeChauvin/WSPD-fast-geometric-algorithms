@@ -1,15 +1,15 @@
 import java.util.*;
 
 /**
- * Implementation of a fast algorithm for computing an approximation of the
- * diameter of a 3D point cloud, based on WSP.
+ * Implementation of a fast algorithm for computing a pair of points giving
+ * an approximation of the diameter of the input point cloud, using a WSPD.
  */
-public class FastDiameter_3 {
+public class FastDiameter {
 
 	/** approximation factor (for approximating the diameter) **/
 	public double epsilon;
 
-	public FastDiameter_3(double epsilon) {
+	public FastDiameter(double epsilon) {
 		this.epsilon = epsilon;
 	}
 

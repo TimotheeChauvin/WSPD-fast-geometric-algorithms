@@ -1,10 +1,10 @@
 import java.util.*;
 
 /**
- * Implementation of a fast algorithm for computing the closest pair, based on
- * WSP.
+ * Implementation of a fast algorithm for computing the closest pair in the input point cloud
+ * using a WSPD.
  */
-public class FastClosestPair_3 {
+public class FastClosestPair {
 
 	/**
 	 * Compute the closest pair of a set of points in 3D space, using a WSPD

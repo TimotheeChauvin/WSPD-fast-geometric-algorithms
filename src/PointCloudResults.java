@@ -33,22 +33,22 @@ public class PointCloudResults {
 	}
 
 	public Point_3[] slowClosestPair() {
-		SlowClosestPair_3 slow = new SlowClosestPair_3();
+		SlowClosestPair slow = new SlowClosestPair();
 		return slow.findClosestPair(this.points);
 	}
 
 	public Point_3[] fastClosestPair() {
-		FastClosestPair_3 fast = new FastClosestPair_3();
+		FastClosestPair fast = new FastClosestPair();
 		return fast.findClosestPair(this.points);
 	}
 
 	public Point_3[] slowDiameter() {
-		SlowDiameter_3 slow = new SlowDiameter_3();
+		SlowDiameter slow = new SlowDiameter();
 		return slow.findFarthestPair(this.points);
 	}
 
 	public Point_3[] fastDiameter(double epsilon) {
-		FastDiameter_3 fast = new FastDiameter_3(epsilon);
+		FastDiameter fast = new FastDiameter(epsilon);
 		return fast.findFarthestPair(this.points);
 	}
 

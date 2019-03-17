@@ -5,7 +5,7 @@
  * @author Code by Luca Castelli Aleardi (INF421 2018, Ecole Polytechnique)
  *
  */
-public class SlowDiameter_3 {
+public class SlowDiameter {
 	
 	/**
 	 * Compute a farthest pair of points realizing the diameter of a set of points in 3D space
