@@ -1,4 +1,3 @@
-import Jcg.geometry.*;
 import java.util.*;
 
 /**

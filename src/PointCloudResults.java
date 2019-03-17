@@ -1,6 +1,5 @@
 import java.io.File;
 import java.util.Scanner;
-import Jcg.geometry.*;
 
 /**
  * Compute the closest and farthest pairs in the point cloud given by the argument
