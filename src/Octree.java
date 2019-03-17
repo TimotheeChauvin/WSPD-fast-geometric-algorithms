@@ -5,9 +5,6 @@ import java.util.*;
 
 /**
  * A class for representing an Octree
- * 
- * @author Luca Castelli Aleardi, Ecole Polytechnique
- * @version december 2018
  */
 public class Octree {
 	public OctreeNode root;

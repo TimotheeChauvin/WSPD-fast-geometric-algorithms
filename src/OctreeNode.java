@@ -4,9 +4,6 @@ import Jcg.geometry.Vector_3;
 
 /**
  * A class for representing a node of an Octree
- * 
- * @author Luca Castelli Aleardi, Ecole Polytechnique
- * @version december 2018
  */
 public class OctreeNode {
 	public int numberPoints; // number of points within the subcube associated with the OctreeNode

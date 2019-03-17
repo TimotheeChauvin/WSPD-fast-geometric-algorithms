@@ -171,7 +171,7 @@ public class FastFR91Layout extends Layout {
 			}
 			i++;
 		}
-		
+		 
 		// evaluate time performances
     	endTime=System.nanoTime();
         double duration=(double)(endTime-startTime)/1000000000.;

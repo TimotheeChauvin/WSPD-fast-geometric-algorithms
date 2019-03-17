@@ -4,11 +4,8 @@ import java.util.*;
 /**
  * Implementation of a fast algorithm for computing the closest pair, based on
  * WSP.
- *
- * @author Code by Luca Castelli Aleardi (INF421 2018, Ecole Polytechnique)
- *
  */
-public class FastClosestPair_3 implements ClosestPair_3 {
+public class FastClosestPair_3 {
 
 	/**
 	 * Compute the closest pair of a set of points in 3D space, using a WSPD

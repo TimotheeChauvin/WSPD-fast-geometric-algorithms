@@ -7,7 +7,7 @@ import Jcg.geometry.*;
  * @author Code by Luca Castelli Aleardi (INF421 2018, Ecole Polytechnique)
  *
  */
-public class SlowClosestPair_3 implements ClosestPair_3 {
+public class SlowClosestPair_3 {
 	
 	/**
 	 * Compute in the naive way the closest pair of a set of points in 3D space
