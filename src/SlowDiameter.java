@@ -1,3 +1,5 @@
+import Jcg.geometry.*;
+
 /**
  * Implementation of a quadratic time algorithm for computing a farthest pair of points (giving the diameter),
  * based on exhaustive search.
@@ -22,7 +24,7 @@ public class SlowDiameter {
 		double distance=0.;
 		for(int i=0;i<points.length;i++) {
 			for(int j=i+1;j<points.length;j++) {
-				double pairDistance=points[i].distanceFrom(points[j]);
+				double pairDistance=points[i].distanceFrom(points[j]).doubleValue();
 				pair=new Point_3[] {points[i], points[j]};
 				if(pairDistance>distance) {
 					result=pair;

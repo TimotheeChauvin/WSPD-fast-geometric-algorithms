@@ -1,4 +1,5 @@
 import java.util.*;
+import Jcg.geometry.Point_3;
 import Jcg.geometry.Vector_3;
 
 /**

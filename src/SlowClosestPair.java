@@ -1,3 +1,5 @@
+import Jcg.geometry.*;
+
 /**
  * Implementation of a quadratic time algorithm for computing the closest pair,
  * based on exhaustive search.
@@ -19,10 +21,10 @@ public class SlowClosestPair {
 		System.out.print("Computing closest pair: slow computation...");
 		Point_3[] result=new Point_3[] {points[0], points[1]};
 		Point_3[] pair;
-		double distance=result[0].distanceFrom(result[1]);
+		double distance=result[0].distanceFrom(result[1]).doubleValue();
 		for(int i=0;i<points.length;i++) {
 			for(int j=i+1;j<points.length;j++) {
-				double pairDistance=points[i].distanceFrom(points[j]);
+				double pairDistance=points[i].distanceFrom(points[j]).doubleValue();
 				pair=new Point_3[] {points[i], points[j]};
 				if(pairDistance<distance) {
 					result=pair;
