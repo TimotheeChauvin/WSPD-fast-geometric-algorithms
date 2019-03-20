@@ -8,9 +8,6 @@ import java.util.*;
 /**
  * A class implementing the Fruchterman and Reingold method with fast approximation of repulsive forces
  * using a WSPD
- * 
- * @author Luca Castelli Aleardi, Ecole Polytechnique
- * @version december 2018
  */
 public class FastFR91Layout extends Layout {
 	// parameters of the algorithm by Fruchterman and Reingold
