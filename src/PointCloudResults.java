@@ -15,7 +15,6 @@ public class PointCloudResults {
 	}
 
 	public static Point_3[] readFile(String filename) throws Exception {
-		System.out.println(filename);
 		File file = new File(filename);
 		Scanner sc = new Scanner(file);
 		sc.nextLine();  // ignore first line: "OFF"
@@ -53,9 +52,8 @@ public class PointCloudResults {
 		return fast.findFarthestPair(this.points);
 	}
 
-	public static void printResults(String methodName, Point_3[] pair, double time) {
-		System.out.println(methodName);
-		System.out.println("time (ms): " + time);
+	public static void printResults(Point_3[] pair, double time) {
+		System.out.println("total time (ms): " + time);
 		System.out.println("pair: " + pair[0] + " ; " + pair[1]);
 		System.out.println("distance: " + WSPD.distance(pair[0], pair[1]));
 		System.out.println();
@@ -69,24 +67,28 @@ public class PointCloudResults {
 		Point_3[] pair;  // the found closest or farthest pair
 
 		// slowClosest
+		System.out.println("SlowClosest");
 		startTime = System.currentTimeMillis();
 		pair = pcr.slowClosestPair();
-		printResults("SlowClosest", pair, (System.currentTimeMillis() - startTime));
+		printResults(pair, (System.currentTimeMillis() - startTime));
 
 		// fastClosest
+		System.out.println("FastClosest");
 		startTime = System.currentTimeMillis();
 		pair = pcr.fastClosestPair();
-		printResults("FastClosest", pair, (System.currentTimeMillis() - startTime));
+		printResults(pair, (System.currentTimeMillis() - startTime));
 
 		// slowDiameter
+		System.out.println("SlowDiameter");
 		startTime = System.currentTimeMillis();
 		pair = pcr.slowDiameter();
-		printResults("SlowDiameter", pair, (System.currentTimeMillis() - startTime));
+		printResults(pair, (System.currentTimeMillis() - startTime));
 
 		// fastDiameter
+		System.out.println("FastDiameter");
 		double epsilon = 0.7; // approximation factor
 		startTime = System.currentTimeMillis();
 		pair = pcr.fastDiameter(epsilon);
-		printResults("FastDiameter", pair, (System.currentTimeMillis() - startTime));
+		printResults(pair, (System.currentTimeMillis() - startTime));
 	}
 }

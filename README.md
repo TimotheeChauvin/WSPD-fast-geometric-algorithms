@@ -38,6 +38,8 @@ The `Main` class is used to perform various small tests of the algorithms.
 
 ## Running
 
+Sample outputs are provided in `results/outputs`.
+
 First download or clone this repository. Then `cd` to the `src` directory, and:
 
 * To execute the `Main` class (various tests), run:

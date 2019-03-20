@@ -1,0 +1,29 @@
+SlowClosest
+Computing closest pair: slow computation...done
+total time (ms): 26.0
+pair: (-0.206959,-0.37914,0.28152) ; (-0.27005,-0.325,0.29587)
+distance: 0.08436549283326683
+
+FastClosest
+Octree (ms): 13
+WSPD (ms): 63
+Number of pairs in WSPD: 20027; 
+FastClosestPair computation (ms): 9
+total time (ms): 87.0
+pair: (-0.206959,-0.37914,0.28152) ; (-0.27005,-0.325,0.29587)
+distance: 0.08436549283326683
+
+SlowDiameter
+Computing farthest pair: slow computation...done
+total time (ms): 17.0
+pair: (-0.523504,-2.45282,-0.55391) ; (1.25707,2.26888,-0.90092)
+distance: 5.05819242413493
+
+FastDiameter
+Octree (ms): 3
+WSPD (ms): 49
+Number of pairs in WSPD: 55689; 
+FastDiameter computation (ms): 12
+total time (ms): 66.0
+pair: (0.668993,-1.91667,-0.16512) ; (-1.64909,1.88614,-1.37287)
+distance: 4.614491602927564
