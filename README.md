@@ -11,9 +11,9 @@
 ## Description
 
 This code implements O(n log n) algorithms to solve the following geometric problems: 
-* computing the closest pair of points (exactly) in a 3D point cloud
-* computing the farthest pair of points (approximately) in a 3D point cloud
-* producing aesthetically pleasing 2D drawings of 3D graphs (by approximating the [Fruchterman and Reingold, 1991](https://dcc.fceia.unr.edu.ar/sites/default/files/uploads/materias/fruchterman.pdf) force-directed graph drawing method).
+* computing the **closest pair** of points (exactly) in a 3D point cloud
+* computing the **farthest pair of points** (approximately) in a 3D point cloud
+* producing aesthetically pleasing **2D drawings of 3D graphs** (by approximating the [Fruchterman and Reingold, 1991](https://dcc.fceia.unr.edu.ar/sites/default/files/uploads/materias/fruchterman.pdf) force-directed graph drawing method)
 
 First, a [Well-Separated Pair Decomposition (WSPD)](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.94.9691&rep=rep1&type=pdf) (class `WSPD`) of the input point cloud is computed. This is done by building an octree storing the point cloud (classes `Octree` and `OctreeNode`).
 
